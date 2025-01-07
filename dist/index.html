@@ -4,329 +4,47 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      padding: 1rem;
-      font-size:0.75rem;
-    }
+  <link rel="stylesheet" href="style/style.css" />
+  <script src="script/storage.js"></script>
+  <script src="script/helpers.js"></script>
+  <script src="script/script.js" defer></script>
 
-    label {
-      display: block;
-      margin-bottom: 0.5rem;
-    }
-
-    textarea {
-      width: 100%;
-      height: 100px;
-      box-sizing: border-box;
-      margin-bottom: 1rem;
-    }
-
-    label[for=history], label[for=alliance] { display: inline-block; }
-    select {}
-
-    .result { margin-top: 1rem;}
-    table {
-       border-collapse: collapse;
-      border: 2px solid #666;
-      position: relative;
-    }
-    thead {
-      font-weight: bold;
-    }
-    td, th {
-      border: 1px #999 solid;
-      padding: 0.5rem;
-    }
-    th {
-      background: #999;
-      border-color: #fff;
-      position: sticky;
-      top: 0;
-    }
-    th:first-child {
-      text-align: left;
-    }
-    .player {
-      background: #eee;
-      font-weight: bold;
-    }
-    .inactive {
-      opacity:0.5;
-      font-style:italic;
-    }
-    .diesel, .deployed, .power {
-      text-align:right
-    }
-    button {
-    cursor:pointer
-    }
-
-    .todo li {
-      list-style-type: "🔲";
-      padding-left: .25rem;
-    }
-    .todo li.done {
-      list-style-type: "✅";
-    }
-  </style>
 </head>
 <body>
-  
-<h1 class="current-war"></h1>
-<label for="data">Paste here the get_member request response</label>
-<textarea id="data" placeholder="Paste here the get_member request response"></textarea>
+ 
+<header>
+  <h1 class="current-war"></h1>
+  <label for="data">Paste here the get_member request response</label>
+  <div id="textarea_container">
+    <textarea id="data" placeholder="Paste here the get_member request response"></textarea>
+  </div>
+  <label for="history">Load previous data</label>
+  <select id="history">
+    <option disabled selected>History</option>
+  </select>
 
-<label for="history">Load previous data</label>
-<select id="history">
-  <option disabled selected>History</option>
-</select>
+  <label for="alliance">Filter by alliance</label>
+  <select id="alliance">
+    <option selected value="">All Alliances</option>
+  </select>
+</header>
 
-<label for="alliance">Filter alliance</label>
-<select id="alliance">
-  <option selected value="">All Alliances</option>
-</select>
 
-<!-- <button id="clearData">
-  Delete history
-</button> -->
+<main>
 <div class="result"></div>
-<!-- <br>
-<img src="https://media.discordapp.net/attachments/1267258088545583145/1268595213539217490/image.webp?ex=673cb25c&is=673b60dc&hm=106d546148857793a7f18a8b67be1caa76ef7861dfd1dc42c3e836a797fb4c70&=&format=webp"/> -->
-<br>ublish on netlify
-<ul>
+<div class="info">
+  <strong>Diesel costs</strong><br><br>
+  <img src="images/diesel.jpg"/>
+  <strong>Entry Points</strong><br><br>
+  <img src="images/entry_point.png"/>
+</div>
+</main>
+
+<br>
+
+<br>
 <script>
-  let data;
-  let warID = `WAR_${getLastMonday()}`
-
-  // Utilitaire IndexDB
-  const storage = {
-    dbName: 'LGAnalysisHistory',
-    storeName: warID,
-    openDB: (storeName) => {
-      return new Promise((resolve, reject) => {
-        const request = indexedDB.open(storage.dbName, warList.length);
-        request.onupgradeneeded = (event) => {
-          const db = event.target.result;
-          if (!db.objectStoreNames.contains(storeName)) {
-            db.createObjectStore(storeName);
-          }
-        };
-        request.onsuccess = () => resolve(request.result);
-        request.onerror = () => reject(request.error);
-        request.versionchange = () => console.log;
-      });
-    },
-    setItem: async (storeName, key, value) => {
-      const db = await storage.openDB(storeName);
-      const transaction = db.transaction(storeName, 'readwrite');
-      const store = transaction.objectStore(storeName);
-      store.put(value, key);
-    },
-    getAll: async(storeName) => {
-      const db = await storage.openDB(storeName);
-      const transaction = db.transaction(storeName, 'readonly');
-      const store = transaction.objectStore(storeName);
-      return new Promise((resolve, reject) => {
-        const request = store.getAll();
-        request.onsuccess = () => resolve(request.result);
-        request.onerror = () => reject(request.error);
-      });
-    },
-    getItem: async(storeName, key) => {
-      const db = await storage.openDB(storeName);
-      const transaction = db.transaction(storeName, 'readonly');
-      const store = transaction.objectStore(storeName);
-      return new Promise((resolve, reject) => {
-        const request = store.get(key);
-        request.onsuccess = () => resolve(request.result);
-        request.onerror = () => reject(request.error);
-      });
-    },
-    deleteItem: async (storeName, key) => {
-      const db = await storage.openDB(storeName);
-      const transaction = db.transaction(storeName, 'readwrite');
-      const store = transaction.objectStore(storeName);
-      store.delete(key);
-    }
-  }
-
-
-
-  // let history = JSON.parse(window.localStorage.getItem("LGAnalysisHistory")) || [];
-  let currentAlliance = 'FuMiCoN'
-  let warList = JSON.parse(window.localStorage.getItem("LGWarList")) || []
-  if(!warList.includes(warID)) warList.push(warID)
-  window.localStorage.setItem("LGWarList", JSON.stringify(warList)) 
-
-  const renderHistorySelector = async (alliance = "") => {
-
-    const DBhistory = await storage.getAll(storage.storeName) || []
-    const historySelector = document.querySelector("#history")
-    const localHistory = [...DBhistory]
-      .filter(h => (alliance === "" || alliance === h.result.guild.name))
-      .sort((a,b) => (a.result.analysisDate < b.result.analysisDate)? -1 : 1)
-    // console.log(alliance)
-    // console.log(DBhistory)
-    console.log(localHistory)
-
-    historySelector.querySelectorAll('option:not(:first-child)').forEach(o => historySelector.removeChild(o))
-
-    localHistory.forEach(h => {
-      const option = document.createElement("option")
-      const date =  new Intl.DateTimeFormat('en-US', {
-      dateStyle: 'short',
-      timeStyle: 'short',
-    }).format(new Date(h.result.analysisDate))
-      const text = document.createTextNode(`${date} - ${h.result.guild.name} - ${h.result.guild.totalPowerUsed} troops used`)
-      option.appendChild(text);
-      option.value=`${h.result.guild.name}_${h.result.guild.totalPowerUsed}_${h.result.guild.summary_power}`;
-      historySelector.appendChild(option);
-    })
-
-    historySelector.querySelector(':last-child').selected = true
-  }
-
-  const renderAllianceSelector = async () => {
-    const allianceList = await getAllianceList()
-    const allianceSelector = document.querySelector("#alliance")
-    allianceList.forEach((a,i) => {
-      const option = document.createElement("option")
-      const text = document.createTextNode(`${a}`)
-      option.appendChild(text);
-      option.value=a;
-      allianceSelector.appendChild(option);
-    })
-  }
-
-  const clearHistory = () => {
-    window.localStorage.removeItem('LGAnalysisHistory');
-    console.log('history cleaned')
-  }
-  function getLastMonday() {
-      const today = new Date();
-      const dayOfWeek = today.getDay(); // 0 = dimanche, 1 = lundi, ..., 6 = samedi
-      const daysSinceMonday = (dayOfWeek + 6) % 7; // Calcul du décalage par rapport au lundi
-      
-      // Soustraction pour revenir au lundi précédent
-      today.setDate(today.getDate() - daysSinceMonday);
-      
-      // Format JJ-MM-AA
-      const dd = String(today.getDate()).padStart(2, '0');
-      const mm = String(today.getMonth() + 1).padStart(2, '0'); // Mois commence à 0
-      const yy = String(today.getFullYear()).slice(-2);
-      
-      return `${dd}-${mm}-${yy}`;
-  }
-
-  const getAllianceList = async () => {
-    const allianceList = []
-    const DBhistory = await storage.getAll(storage.storeName) || []
-    DBhistory.forEach((h,i) => {
-      if(!allianceList.includes(h.result.guild.name)) {
-        allianceList.push(h.result.guild.name)
-      }
-    })
-    return allianceList
-  }
-
-  const process = (data, shouldSave=false) => {
-    let html = `<strong>${data.result.guild.name}</strong><br><br>
-    <table>
-      <tr>
-        <th class=''>Player</th>
-        <th class='diesel'> Diesel used</th>
-        <th class='deployed'> Deployed power</th>
-        <th class='power'> Raw power</th>
-       </tr>
-     `
-    let totalDeployed = 0;
-    let totalDieselDeployed = 0;
-    let totalUneployed = 0;
-    data.result.members
-      .sort((a, b) => {
-        if (a.summary_power !== b.summary_power) {
-          return a.summary_power - b.summary_power; 
-        } 
-        return a.remaining_power - b.remaining_power; 
-      })
-      .reverse()
-      .forEach(m => {
-      const inactivityInHour = Math.floor((new Date()-new Date(m.last_visit)+(new Date().getTimezoneOffset()*(60*1000)))/1000/60/60)
-      const isActive = inactivityInHour < 24;
-      totalDeployed += m.summary_power;
-      totalDieselDeployed += m.spent_elixir;
-
-      totalUneployed += (m.remaining_power > m.summary_power)? m.remaining_power - m.summary_power : 0;
-
-      html += `<tr>
-         <td class='player ${isActive?'':'inactive'}'>
-          ${m.NameBit.Name}${isActive?'':' (i)'}
-          ${m.locked_gw_till  != null  ? '<span title="'+m.locked_gw_till+'">🔒</span>':''}
-        </td> 
-        <td class='diesel'> ${m.spent_elixir.toLocaleString('en-US')}</td>
-        <td class='deployed'> ${m.summary_power.toLocaleString('en-US')}</td>
-        <td class='power'> ${m.remaining_power.toLocaleString('en-US')}</td>
-      </tr>`
-    })
-    html += `<tr>
-    <td class='player'>TOTAL</td>
-    <td>${totalDieselDeployed}</td>
-    <td>${totalDeployed}</td>
-    <td>${totalUneployed} / ${data.result.guild.summary_power}</td>
-    </tr>`
-    html += "</table>"
-    html += "</table>"
-    
-    document.querySelector('.result').innerHTML = html;
-    
-    if(!shouldSave) return;
-    data.result.guild.totalPowerUsed = totalDeployed;
-    data.result.analysisDate = new Date().getTime();
-    saveHistory(data)
-    renderHistorySelector()
-  }
-
-  const saveHistory = (data) => {
-    //history.push(data)
-    //window.localStorage.setItem("LGAnalysisHistory", JSON.stringify(history)) 
-    storage.setItem(storage.storeName, `${data.result.guild.name}_${data.result.guild.totalPowerUsed}_${data.result.guild.summary_power}`, data)
-  }
-
-  document.addEventListener('DOMContentLoaded', async () => {
-
-    document.querySelector('.current-war').innerHTML = warID;
-
-    await renderHistorySelector()
-    renderAllianceSelector()
-
-    document.addEventListener('paste', async (e) => {
-      setTimeout(() => {
-        data = document.querySelector('#data').value
-        process(JSON.parse(data), true)
-        
-      },0)
-    })
-    document.querySelector('#history').addEventListener('change', async (e) => {
-      const key = e.target.value
-      const data = await storage.getItem(storage.storeName, key)
-      process(data)
-    })
-    document.querySelector('#alliance').addEventListener('change', e => {
-      renderHistorySelector(e.target.value)
-    })
-    // document.querySelector('#clearData').addEventListener('click', () => {
-    //   window.localStorage.removeItem('LGAnalysisHistory');
-    //   history = []
-    //   renderHistorySelector();
-    // })
-
-    storage.getItem(storage.storeName, document.querySelector('#history option:last-child').value).then(r => {
-      if(r) process(r)
-    })
-
-  })
+  
 </script>
 </body>
 </html>

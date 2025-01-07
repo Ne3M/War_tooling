@@ -6,7 +6,7 @@
 [x] Make Alliance selector  
 [x] Make an alliance filter  
 [ ] select last know report after filtering alliance  
-[ ] Add diesel table  
-[ ] Add entry point  
+[x] Add diesel table  
+[x] Add entry point  
 [ ] Add estimation of remaining troops  
-[ ] Publish on netlify  
+[x] Publish on netlify  

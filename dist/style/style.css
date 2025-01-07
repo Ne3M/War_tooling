@@ -1,0 +1,114 @@
+body {
+    font-family: sans-serif;
+    padding: 1rem;
+    font-size:0.75rem;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  #textarea_container {
+    margin-bottom: 1rem;
+    position: relative;
+  }
+  #textarea_container.pasted:after {
+    content: "Data received...";
+    font-weight: bold;
+    font-size: 1.5rem;
+    position: absolute;
+    text-align: center;
+    line-height: 100px;
+    left: 0; top: 0;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    box-sizing: border-box;
+    border: .5rem solid #666;
+    animation: fadeOut 1s;
+    animation-fill-mode: forwards;
+    pointer-events: none;
+    cursor: pointer;
+  }
+  textarea {
+    width: 100%;
+    height: 100px;
+    box-sizing: border-box;
+    
+  }
+
+  label[for=history], label[for=alliance] { display: inline-block; }
+  select {}
+
+
+  main {
+    display: flex;
+    gap: 1rem;
+  }
+  main .info {
+    max-width: 50%;
+    margin-top: 1rem;
+  }
+  main .info img {
+    max-width: 100%;
+    display: block;
+    margin-bottom: 1rem;
+  }
+
+
+  .result { 
+    margin-top: 1rem;
+    width: calc(50% - 1rem);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 2px solid #666;
+    position: relative;
+  }
+  thead {
+    font-weight: bold;
+  }
+  td, th {
+    border: 1px #999 solid;
+    padding: 0.5rem;
+    text-align: right;
+  }
+  th {
+    background: #999;
+    border-color: #fff;
+    position: sticky;
+    top: 0;
+  }
+  th:first-child {
+    text-align: left;
+  }
+  .player {
+    background: #eee;
+    font-weight: bold;
+    text-align: left;
+  }
+  .inactive {
+    opacity:0.5;
+    font-style:italic;
+  }
+  .diesel, .deployed, .power {
+    text-align:right
+  }
+  button {
+  cursor:pointer
+  }
+
+  .todo li {
+    list-style-type: "🔲";
+    padding-left: .25rem;
+  }
+  .todo li.done {
+    list-style-type: "✅";
+  }
+
+  @keyframes fadeOut {
+    0% { opacity: 1;}
+    100% { opacity: 0;}
+}
