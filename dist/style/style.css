@@ -62,7 +62,7 @@ body {
     width: calc(50% - 1rem);
   }
   table {
-    width: 100%;
+    max-width: 100%;
     border-collapse: collapse;
     border: 2px solid #666;
     position: relative;
