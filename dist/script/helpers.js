@@ -121,7 +121,7 @@ const renderHistorySelector = async (alliance = "") => {
     
     if(!shouldSave) return;
     data.result.guild.totalPowerUsed = totalDeployed;
-    data.result.analysisDate = new Date().getTime();
+    data.result.analysisDate = data.result.analysisDate || new Date().getTime();
     saveHistory(data)
     renderHistorySelector()
   }
