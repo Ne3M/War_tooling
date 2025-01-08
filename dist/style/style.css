@@ -68,8 +68,10 @@ body {
     
   }
 
+
   label[for=history], label[for=alliance] { display: inline-block; }
-  select {}
+  select#alliance option { font-weight: bold; text-shadow: 0px 0px 2px #fff; }
+  select#history option { font-weight: bold; text-shadow: 0px 0px 2px #fff; }
 
 
   main {
@@ -88,6 +90,9 @@ body {
 
     main strong {
       font-size: 1.15rem;
+      display: block;
+      padding: 0.25rem;
+      text-shadow: 0px 0px 2px #fff;
     }
 
   .result { 

@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.addEventListener('paste', async (e) => {
         setTimeout(() => {
             data = document.querySelector('#data').value
-            generateTable(JSON.parse(data), true)
+            detectDataType(JSON.parse(data), true)
             document.querySelector('#data').value = ''
             document.querySelector('#textarea_container').classList.add('pasted')
             setTimeout(() => {

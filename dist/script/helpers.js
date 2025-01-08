@@ -17,10 +17,12 @@ function getLastMonday() {
 const getAllianceList = async () => {
     const allianceList = []
     const DBhistory = await storage.getAll(storage.storeName) || []
-    DBhistory.forEach((h,i) => {
-      if(!allianceList.includes(h.result.guild.name)) {
-        allianceList.push(h.result.guild.name)
-      }
+    DBhistory
+      .filter(h => (!(h instanceof Array)))
+      .forEach((h,i) => {
+        if(!allianceList.includes(h.result.guild?.name)) {
+          allianceList.push(h.result.guild.name)
+        }
     })
     return allianceList
 }
@@ -31,14 +33,13 @@ const saveHistory = (data) => {
 
 const renderHistorySelector = async (alliance = "") => {
 
+    const allianceColors = await storage.getItem(storage.storeName, 'Alliances_colors') || []
     const DBhistory = await storage.getAll(storage.storeName) || []
     const historySelector = document.querySelector("#history")
     const localHistory = [...DBhistory]
+      .filter(h => (!(h instanceof Array)))
       .filter(h => (alliance === "" || alliance === h.result.guild.name))
       .sort((a,b) => (a.result.analysisDate < b.result.analysisDate)? -1 : 1)
-    // console.log(alliance)
-    // console.log(DBhistory)
-    console.log(localHistory)
 
     historySelector.querySelectorAll('option:not(:first-child)').forEach(o => historySelector.removeChild(o))
 
@@ -49,6 +50,7 @@ const renderHistorySelector = async (alliance = "") => {
       timeStyle: 'short',
     }).format(new Date(h.result.analysisDate))
       const text = document.createTextNode(`${date} - ${h.result.guild.name} - ${h.result.guild.totalPowerUsed} troops used`)
+      option.style.background = allianceColors.find(ally=>ally.name === h.result.guild.name)?.color
       option.appendChild(text);
       option.value=`${h.result.guild.name}_${h.result.guild.totalPowerUsed}_${h.result.guild.summary_power}`;
       historySelector.appendChild(option);
@@ -59,18 +61,22 @@ const renderHistorySelector = async (alliance = "") => {
 
   const renderAllianceSelector = async () => {
     const allianceList = await getAllianceList()
+    const allianceColors = await storage.getItem(storage.storeName, 'Alliances_colors') || []
     const allianceSelector = document.querySelector("#alliance")
     allianceList.forEach((a,i) => {
       const option = document.createElement("option")
       const text = document.createTextNode(`${a}`)
+      option.style.background = allianceColors.find(ally=>ally.name === a)?.color
       option.appendChild(text);
       option.value=a;
       allianceSelector.appendChild(option);
     })
   }
 
-  const generateTable = (data, shouldSave=false) => {
-    let html = `<strong>${data.result.guild.name}</strong><br><br>
+  const generateTable = async (data, shouldSave=false) => {
+    const allianceColors = await storage.getItem(storage.storeName, 'Alliances_colors') || []
+
+    let html = `<strong style="background: ${allianceColors.find(ally=>ally.name === data.result.guild.name)?.color}">${data.result.guild.name}</strong>
     <table>
       <tr>
         <th class=''>Player</th>
@@ -142,4 +148,22 @@ const displayLastReport = () => {
     storage.getItem(storage.storeName, document.querySelector('#history option:last-child').value).then(r => {
         if(r) generateTable(r)
     })
+}
+
+
+const colors = ["#66fefe", "#44b2e0", "#403dfd", "#ed40f1", "#d31616", "#fcbc82", "#ecfe01", "#986633", "#9833fe", "#2b802b"]
+const setAllianceColors = (data) => {
+  const allianceColors = []
+  data.result.guilds.forEach((a,i) => {
+    allianceColors.push({
+      name: a.guild_name, 
+      color: colors[i]
+    })
+  })
+  storage.setItem(storage.storeName, `Alliances_colors`, allianceColors)
+}
+
+const detectDataType = (data) => {
+  if (data.result.guilds) setAllianceColors(data)
+  if (data.result.members) generateTable(data, true)
 }
