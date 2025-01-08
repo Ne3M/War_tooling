@@ -82,6 +82,7 @@ const renderHistorySelector = async (alliance = "") => {
     let totalDeployed = 0;
     let totalDieselDeployed = 0;
     let totalUndeployed = 0;
+    let totalLocked = 0;
     data.result.members
       .sort((a, b) => {
         if (a.summary_power !== b.summary_power) {
@@ -98,13 +99,15 @@ const renderHistorySelector = async (alliance = "") => {
 
       const inactivityInHour = Math.floor((new Date(data.result.analysisDate)-new Date(m.last_visit)+(new Date().getTimezoneOffset()*(60*1000)))/1000/60/60)
       const isActive = inactivityInHour < 24;
+      const isLocked = new Date(m.locked_gw_till).getTime() > new Date(data.result.analysisDate).getTime()
       totalDeployed += m.summary_power;
       totalDieselDeployed += m.spent_elixir;
-
+      totalLocked += isLocked ? m.remaining_power : 0;
+    
       html += `<tr>
          <td class='player ${isActive?'':'inactive'}'>
           ${m.NameBit.Name}${isActive?'':' (i)'}
-          ${m.locked_gw_till  != null  ? '<span title="'+m.locked_gw_till+'">🔒</span>':''}
+          ${isLocked ? '<span title="'+m.locked_gw_till+'">🔒</span>':''}
         </td> 
         <td class='diesel'> ${m.spent_elixir.toLocaleString('es-ES')}</td>
         <td class='deployed'> ${m.summary_power.toLocaleString('es-ES')}</td>
@@ -119,7 +122,11 @@ const renderHistorySelector = async (alliance = "") => {
     </tr>
     <tr>
       <td class='player'>UNDEPLOYED TROOPS</td>
-      <td colspan="3">${totalUndeployed.toLocaleString('es-ES')}</td>
+      <td colspan="3">${(totalUndeployed - totalLocked).toLocaleString('es-ES')}</td>
+    </tr>
+    <tr>
+      <td class='player'>LOCKED TROOPS</td>
+      <td colspan="3">${totalLocked.toLocaleString('es-ES')}</td>
     </tr>`
     html += "</table>"
     html += "</table>"
