@@ -38,8 +38,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     })
 
     // You filter reports by alliance
-    document.querySelector('#alliance').addEventListener('change', e => {
-        renderHistorySelector(e.target.value);
+    document.querySelector('#alliance').addEventListener('change', async (e) => {
+        await renderHistorySelector(e.target.value);
         displayLastReport()
     })
 
