@@ -81,7 +81,7 @@ const renderHistorySelector = async (alliance = "") => {
      `
     let totalDeployed = 0;
     let totalDieselDeployed = 0;
-    let totalUneployed = 0;
+    let totalUndeployed = 0;
     data.result.members
       .sort((a, b) => {
         if (a.summary_power !== b.summary_power) {
@@ -91,28 +91,35 @@ const renderHistorySelector = async (alliance = "") => {
       })
       .reverse()
       .forEach(m => {
-      const inactivityInHour = Math.floor((new Date()-new Date(m.last_visit)+(new Date().getTimezoneOffset()*(60*1000)))/1000/60/60)
+
+      totalUndeployed += (m.remaining_power > m.summary_power)? m.remaining_power - m.summary_power : 0;
+      data.result.guild.totalPowerUsed = totalDeployed;
+      data.result.analysisDate = data.result.analysisDate || new Date().getTime();
+
+      const inactivityInHour = Math.floor((new Date(data.result.analysisDate)-new Date(m.last_visit)+(new Date().getTimezoneOffset()*(60*1000)))/1000/60/60)
       const isActive = inactivityInHour < 24;
       totalDeployed += m.summary_power;
       totalDieselDeployed += m.spent_elixir;
-
-      totalUneployed += (m.remaining_power > m.summary_power)? m.remaining_power - m.summary_power : 0;
 
       html += `<tr>
          <td class='player ${isActive?'':'inactive'}'>
           ${m.NameBit.Name}${isActive?'':' (i)'}
           ${m.locked_gw_till  != null  ? '<span title="'+m.locked_gw_till+'">🔒</span>':''}
         </td> 
-        <td class='diesel'> ${m.spent_elixir.toLocaleString('en-US')}</td>
-        <td class='deployed'> ${m.summary_power.toLocaleString('en-US')}</td>
-        <td class='power'> ${m.remaining_power.toLocaleString('en-US')}</td>
+        <td class='diesel'> ${m.spent_elixir.toLocaleString('es-ES')}</td>
+        <td class='deployed'> ${m.summary_power.toLocaleString('es-ES')}</td>
+        <td class='power'> ${m.remaining_power.toLocaleString('es-ES')}</td>
       </tr>`
     })
     html += `<tr>
     <td class='player'>TOTAL</td>
-    <td>${totalDieselDeployed}</td>
-    <td>${totalDeployed}</td>
-    <td>${totalUneployed} / ${data.result.guild.summary_power}</td>
+    <td>${totalDieselDeployed.toLocaleString('es-ES')}</td>
+    <td>${totalDeployed.toLocaleString('es-ES')}</td>
+    <td>${data.result.guild.summary_power.toLocaleString('es-ES')}</td>
+    </tr>
+    <tr>
+      <td class='player'>UNDEPLOYED TROOPS</td>
+      <td colspan="3">${totalUndeployed.toLocaleString('es-ES')}</td>
     </tr>`
     html += "</table>"
     html += "</table>"
@@ -120,8 +127,6 @@ const renderHistorySelector = async (alliance = "") => {
     document.querySelector('.result').innerHTML = html;
     
     if(!shouldSave) return;
-    data.result.guild.totalPowerUsed = totalDeployed;
-    data.result.analysisDate = data.result.analysisDate || new Date().getTime();
     saveHistory(data)
     renderHistorySelector()
   }
