@@ -1,8 +1,7 @@
 let data;
-let warID = `WAR_${getLastMonday()}`
+let lastUsedProfile = window.localStorage.getItem("lastUsedProfile") || 'WAR'
+let warID = `${lastUsedProfile}_${getLastMonday()}`
 storage.storeName = warID;
-
-// let currentAlliance = 'FuMiCoN'
 
 let warList = JSON.parse(window.localStorage.getItem("LGWarList")) || []
 if(!warList.includes(warID)) {
@@ -12,16 +11,13 @@ if(!warList.includes(warID)) {
 
 document.addEventListener('DOMContentLoaded', async () => {
     
-    document.querySelector('.current-war').innerHTML = warID;
-    
-    await renderHistorySelector()
-    await renderAllianceSelector()
-    
+    init();
+
     // You paste the data
     document.addEventListener('paste', async (e) => {
         setTimeout(() => {
             data = document.querySelector('#data').value
-            detectDataType(JSON.parse(data), true)
+            detectDataType(JSON.parse(data))
             document.querySelector('#data').value = ''
             document.querySelector('#textarea_container').classList.add('pasted')
             setTimeout(() => {
@@ -43,12 +39,39 @@ document.addEventListener('DOMContentLoaded', async () => {
         displayLastReport()
     })
 
+    // You add a profile
+    document.querySelector('#profile').addEventListener('change', async (e) => {
+        if(e.target.value === "addProfile") {
+            const currentProfleList = JSON.parse(window.localStorage.getItem("profileList")) || []
+            newProfile = window.prompt('Name your profile\nLike your current alliance name', '');
+            window.localStorage.setItem("profileList", JSON.stringify([...currentProfleList, newProfile]))
+            renderProfileSelector();
+            document.querySelector(`#profile option[value=${newProfile}]`).selected = true
+        }
+
+        lastUsedProfile = e.target.value
+        warID = `${lastUsedProfile}_${getLastMonday()}`
+        storage.storeName = warID;
+        window.localStorage.setItem("lastUsedProfile", lastUsedProfile)
+
+        // Reinit All
+        init()
+
+    })
+
+    document.querySelector('#open_modal').addEventListener('click', async (e) => {
+        document.querySelector('#instruction').showModal()
+    })
+    document.querySelector('#close_modal').addEventListener('click', async (e) => {
+        document.querySelector('#instruction').close()
+    })
+
     // document.querySelector('#clearData').addEventListener('click', () => {
     //   window.localStorage.removeItem('LGAnalysisHistory');
     //   history = []
     //   renderHistorySelector();
     // })
     
-    displayLastReport()
+    
     
 })

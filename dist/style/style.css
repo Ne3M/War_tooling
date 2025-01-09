@@ -5,13 +5,29 @@ body {
     font-size:0.75rem;
   }
 
-    h1 {
-      margin-top: 0;
-    }
-  header:after {
+  h1 {
+    margin-top: 0;
+  }
+  body > header:after {
     content: "";
     display: block;
     clear: both;
+  }
+
+  .top_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+  }
+
+  #open_modal {
+    background: none;
+    padding: 0;
+    border: 0;
+    line-height: 20px;
+  }
+  #open_modal svg {
+    vertical-align: middle;
   }
 
   fieldset {
@@ -88,12 +104,12 @@ body {
     margin-bottom: 1rem;
   }
 
-    main strong {
-      font-size: 1.15rem;
-      display: block;
-      padding: 0.25rem;
-      text-shadow: 0px 0px 2px #fff;
-    }
+  main strong {
+    font-size: 1.15rem;
+    display: block;
+    padding: 0.25rem;
+    text-shadow: 0px 0px 2px #fff;
+  }
 
   .result { 
     margin-top: 1rem;
@@ -149,4 +165,41 @@ body {
   @keyframes fadeOut {
     0% { opacity: 1;}
     100% { opacity: 0;}
+}
+
+#instruction {
+  width: 80%;
+  max-height: 80%;
+  padding: 1.5rem;
+  border-radius: .5rem;
+  margin-top: 3rem;
+}
+::backdrop {
+  background-image: linear-gradient(
+    45deg,
+    #666,
+    #000
+  );
+  opacity: 0.75;
+}
+
+#instruction header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+}
+#instruction button {
+  background: none;
+  padding: 0;
+  border: 0;
+}
+
+#instruction details {
+  padding: .5rem 0 0 1.5rem;
+}
+#instruction summary {
+  font-size: 1.125em;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  margin-left: -1rem;
 }

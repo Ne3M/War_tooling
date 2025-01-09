@@ -1,4 +1,12 @@
-function getLastMonday() {
+const init = async () => {
+  document.querySelector('.current-war').innerHTML = warID;
+  await renderHistorySelector()
+  await renderAllianceSelector()
+  renderProfileSelector()
+  displayLastReport()
+}
+
+const getLastMonday = () => {
     const today = new Date();
     const dayOfWeek = today.getDay(); // 0 = dimanche, 1 = lundi, ..., 6 = samedi
     const daysSinceMonday = (dayOfWeek + 6) % 7; // Calcul du décalage par rapport au lundi
@@ -31,6 +39,34 @@ const saveHistory = (data) => {
     storage.setItem(storage.storeName, `${data.result.guild.name}_${data.result.guild.totalPowerUsed}_${data.result.guild.summary_power}`, data)
 }
 
+const renderProfileSelector = async () => {
+  const profileList = JSON.parse(window.localStorage.getItem("profileList")) || []
+  const profileSelector = document.querySelector('#profile')
+
+  profileSelector.querySelectorAll('option').forEach(o => profileSelector.removeChild(o))
+
+  const defaultOption = document.createElement("option")
+  defaultOption.appendChild(document.createTextNode(`default`))
+  defaultOption.value = "WAR"
+  profileSelector.appendChild(defaultOption);
+ 
+  for(profile of profileList) {
+    const profileOption = document.createElement("option")
+    profileOption.appendChild(document.createTextNode(profile))
+    profileOption.value = profile
+    profileSelector.appendChild(profileOption);
+  }
+
+  const addProfileOption = document.createElement("option")
+  addProfileOption.appendChild(document.createTextNode(`Add a new profile`));
+  addProfileOption.value = 'addProfile'
+  profileSelector.appendChild(addProfileOption);
+
+  profileSelector.querySelector(`option[value=${lastUsedProfile}]`).selected = true;
+  
+ 
+}
+
 const renderHistorySelector = async (alliance = "") => {
 
     const allianceColors = await storage.getItem(storage.storeName, 'Alliances_colors') || []
@@ -57,12 +93,15 @@ const renderHistorySelector = async (alliance = "") => {
     })
 
     historySelector.querySelector(':last-child').selected = true
-  }
+}
 
-  const renderAllianceSelector = async () => {
+const renderAllianceSelector = async () => {
     const allianceList = await getAllianceList()
     const allianceColors = await storage.getItem(storage.storeName, 'Alliances_colors') || []
     const allianceSelector = document.querySelector("#alliance")
+
+    allianceSelector.querySelectorAll('option:not(:first-child)').forEach(o => allianceSelector.removeChild(o))
+
     allianceList.forEach((a,i) => {
       const option = document.createElement("option")
       const text = document.createTextNode(`${a}`)
@@ -71,9 +110,9 @@ const renderHistorySelector = async (alliance = "") => {
       option.value=a;
       allianceSelector.appendChild(option);
     })
-  }
+}
 
-  const generateTable = async (data, shouldSave=false) => {
+const generateTable = async (data, shouldSave=false) => {
     const allianceColors = await storage.getItem(storage.storeName, 'Alliances_colors') || []
 
     let html = `<strong style="background: ${allianceColors.find(ally=>ally.name === data.result.guild.name)?.color}">${data.result.guild.name}</strong>
@@ -142,7 +181,7 @@ const renderHistorySelector = async (alliance = "") => {
     if(!shouldSave) return;
     saveHistory(data)
     renderHistorySelector()
-  }
+}
 
 const displayLastReport = () => {
     storage.getItem(storage.storeName, document.querySelector('#history option:last-child').value).then(r => {

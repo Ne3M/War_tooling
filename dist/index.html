@@ -8,48 +8,97 @@
   <script src="script/storage.js"></script>
   <script src="script/helpers.js"></script>
   <script src="script/script.js" defer></script>
-
+  
 </head>
 <body>
- 
-<header>
-  <h1 class="current-war"></h1>
-<fieldset class="paste_box">
-  <label for="data">Paste here the get_member request response</label>
-  <div id="textarea_container">
-    <textarea id="data" placeholder="Paste here the get_member request response"></textarea>
-  </div>
-</fieldset>
-  <fieldset>
-  <label for="history">Load previous data</label>
-  <select id="history">
-    <option disabled selected>History</option>
-  </select>
-</fieldset>
-<fieldset>
-  <label for="alliance">Filter by alliance</label>
-  <select id="alliance">
-    <option selected value="">All Alliances</option>
-  </select>
-</fieldset>
-</header>
-
-
-<main>
-<div class="result"></div>
-<div class="info">
-  <strong>Diesel costs</strong>
-  <img src="images/diesel.jpg"/>
-  <strong>Entry Points</strong>
-  <img src="images/entry_point.png"/>
-</div>
-</main>
-
-<br>
-
-<br>
-<script>
   
-</script>
+  <header>
+    <div class="top_header">
+      <h1 class="current-war"></h1>
+
+      <button id="open_modal">
+        Instruction
+        <svg viewBox="0 0 24 24" width="20px" height="20px" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 17.75C12.4142 17.75 12.75 17.4142 12.75 17V11C12.75 10.5858 12.4142 10.25 12 10.25C11.5858 10.25 11.25 10.5858 11.25 11V17C11.25 17.4142 11.5858 17.75 12 17.75Z" fill="#1C274C"></path> <path d="M12 7C12.5523 7 13 7.44772 13 8C13 8.55228 12.5523 9 12 9C11.4477 9 11 8.55228 11 8C11 7.44772 11.4477 7 12 7Z" fill="#1C274C"></path> <path fill-rule="evenodd" clip-rule="evenodd" d="M1.25 12C1.25 6.06294 6.06294 1.25 12 1.25C17.9371 1.25 22.75 6.06294 22.75 12C22.75 17.9371 17.9371 22.75 12 22.75C6.06294 22.75 1.25 17.9371 1.25 12ZM12 2.75C6.89137 2.75 2.75 6.89137 2.75 12C2.75 17.1086 6.89137 21.25 12 21.25C17.1086 21.25 21.25 17.1086 21.25 12C21.25 6.89137 17.1086 2.75 12 2.75Z" fill="#1C274C"></path>
+        </svg>
+      </button>
+
+      <fieldset>
+        <label for="profile">Select profile</label>
+        <select id="profile"></select>      
+      </fieldset>
+    </div>
+
+    <fieldset class="paste_box">
+      <label for="data">Paste here the get_member request response</label>
+      <div id="textarea_container">
+        <textarea id="data" placeholder="Paste here the get_member request response"></textarea>
+      </div>
+    </fieldset>
+    
+    <fieldset>
+      <label for="alliance">Filter by alliance</label>
+      <select id="alliance">
+        <option selected value="">All Alliances</option>
+      </select>
+    </fieldset>
+
+    <fieldset>
+      <label for="history">Load previous data</label>
+      <select id="history">
+        <option disabled selected>History</option>
+      </select>
+    </fieldset>
+  </header>
+  
+  
+  <main>
+    <div class="result"></div>
+    <div class="info">
+      <strong>Diesel costs</strong>
+      <img src="images/diesel.jpg"/>
+      <strong>Entry Points</strong>
+      <img src="images/entry_point.png"/>
+    </div>
+  </main>
+  
+  <dialog id="instruction">
+    <header>
+      <h1>List of features</h1>
+      <button id="close_modal">
+        <svg fill="#000000" height="20px" width="20px" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 490 490" xml:space="preserve">
+          <polygon points="456.851,0 245,212.564 33.149,0 0.708,32.337 212.669,245.004 0.708,457.678 33.149,490 245,277.443 456.851,490 489.292,457.678 277.331,245.004 489.292,32.337 "></polygon>
+        </svg>
+      </button>
+    </header>
+
+    <details>
+      <summary>Store Alliance War deployment report</summary>
+      In the web version of the web, using your browser devTools (F12 > Network > XHR), copy the `get_members` request response and paste it in the text area.<br>
+      The report automatcly loads, and is stored locally for later inspection
+    </details>
+
+    <details>
+      <summary>Filter you reports by alliance</summary>
+      When you have multiple report and want to analyze an alliance deployment history, select that alliance in the filter next to the text area.<br>
+      The last report of this alliance will load, and the previous data selector will only show the selected alliance.
+      To show all the alliances, select `All alliances` 
+    </details>
+
+    <details>
+      <summary>Apply colors to the alliances</summary>
+      To apply the ingame colors to report for easier reading, you can paste in the text area the response of the `get_room_guilds` request.<br>
+      You only need to do it once per war.
+    </details>
+
+    <details>
+      <summary>Switch between multiple profile</summary>
+      If you play on multiple alliance, or want to differenciate some reports, you can add a new profile with the top-right selector.
+      The reports you paste are scoped with the current profile and allow you to track separate maps or group of alliances.
+    </details>
+
+  </dialog>
+
+
 </body>
 </html>
