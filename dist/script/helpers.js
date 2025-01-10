@@ -180,7 +180,12 @@ const generateTable = async (data, shouldSave=false) => {
     
     if(!shouldSave) return;
     saveHistory(data)
-    renderHistorySelector()
+    if(currentAllianceFilter === data.result.guild.name) {
+      renderHistorySelector(currentAllianceFilter)
+    } else {
+      document.querySelector('#alliance :first-child').selected = true
+      renderHistorySelector()
+    }
 }
 
 const displayLastReport = () => {

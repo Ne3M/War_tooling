@@ -1,6 +1,7 @@
 let data;
 let lastUsedProfile = window.localStorage.getItem("lastUsedProfile") || 'WAR'
 let warID = `${lastUsedProfile}_${getLastMonday()}`
+let currentAllianceFilter = ""
 storage.storeName = warID;
 
 let warList = JSON.parse(window.localStorage.getItem("LGWarList")) || []
@@ -35,7 +36,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // You filter reports by alliance
     document.querySelector('#alliance').addEventListener('change', async (e) => {
-        await renderHistorySelector(e.target.value);
+        currentAllianceFilter = e.target.value
+        await renderHistorySelector(currentAllianceFilter);
         displayLastReport()
     })
 
@@ -59,6 +61,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     })
 
+    // Open feature listing
     document.querySelector('#open_modal').addEventListener('click', async (e) => {
         document.querySelector('#instruction').showModal()
     })
