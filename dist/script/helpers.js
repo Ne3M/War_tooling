@@ -139,15 +139,17 @@ const generateTable = async (data, shouldSave=false) => {
       .forEach(m => {
 
       totalUndeployed += (m.remaining_power > m.summary_power)? m.remaining_power - m.summary_power : 0;
+      totalDeployed += m.summary_power;
+      totalDieselDeployed += m.spent_elixir;
+      totalLocked += isLocked ? m.remaining_power : 0;
+
       data.result.guild.totalPowerUsed = totalDeployed;
       data.result.analysisDate = data.result.analysisDate || new Date().getTime();
 
       const inactivityInHour = Math.floor((new Date(data.result.analysisDate)-new Date(m.last_visit)+(new Date().getTimezoneOffset()*(60*1000)))/1000/60/60)
       const isActive = inactivityInHour < 24;
       const isLocked = new Date(m.locked_gw_till).getTime() > new Date(data.result.analysisDate).getTime()
-      totalDeployed += m.summary_power;
-      totalDieselDeployed += m.spent_elixir;
-      totalLocked += isLocked ? m.remaining_power : 0;
+
     
       html += `<tr>
          <td class='player ${isActive?'':'inactive'}'>
