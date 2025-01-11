@@ -138,6 +138,10 @@ const generateTable = async (data, shouldSave=false) => {
       .reverse()
       .forEach(m => {
 
+      const inactivityInHour = Math.floor((new Date(data.result.analysisDate)-new Date(m.last_visit)+(new Date().getTimezoneOffset()*(60*1000)))/1000/60/60)
+      const isActive = inactivityInHour < 24;
+      const isLocked = new Date(m.locked_gw_till).getTime() > new Date(data.result.analysisDate).getTime()
+
       totalUndeployed += (m.remaining_power > m.summary_power)? m.remaining_power - m.summary_power : 0;
       totalDeployed += m.summary_power;
       totalDieselDeployed += m.spent_elixir;
@@ -146,9 +150,7 @@ const generateTable = async (data, shouldSave=false) => {
       data.result.guild.totalPowerUsed = totalDeployed;
       data.result.analysisDate = data.result.analysisDate || new Date().getTime();
 
-      const inactivityInHour = Math.floor((new Date(data.result.analysisDate)-new Date(m.last_visit)+(new Date().getTimezoneOffset()*(60*1000)))/1000/60/60)
-      const isActive = inactivityInHour < 24;
-      const isLocked = new Date(m.locked_gw_till).getTime() > new Date(data.result.analysisDate).getTime()
+
 
     
       html += `<tr>
