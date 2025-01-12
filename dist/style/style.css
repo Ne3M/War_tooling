@@ -129,6 +129,10 @@ body {
     padding: 0.375rem 0.5rem;
     text-align: right;
   }
+  td svg, th svg {
+    vertical-align: text-bottom;
+    cursor: pointer;
+  }
   th {
     background: #999;
     border-color: #fff;
