@@ -3,7 +3,12 @@ const storage = {
     storeName: 'default',
     openDB: (storeName, dbName = storage.dbName) => {
         return new Promise((resolve, reject) => {
-            const request = indexedDB.open(dbName, warList.length);
+            let request;
+            if ((typeof warList !== 'undefined')) {
+                request = indexedDB.open(dbName, warList.length);
+            } else {
+                request = indexedDB.open(dbName);
+            }
             request.onupgradeneeded = (event) => {
                 const db = event.target.result;
                 if (!db.objectStoreNames.contains(storeName)) {

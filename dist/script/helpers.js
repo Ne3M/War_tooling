@@ -1,4 +1,11 @@
 const init = async () => {
+  warList = await storage.getItem('GlobalData', 'LGWarList', 'LGToolData') || JSON.parse(window.localStorage.getItem("LGWarList")) || []
+  if(!warList.includes(warID)) {
+      warList.push(warID) 
+      window.localStorage.setItem("LGWarList", JSON.stringify(warList));
+      storage.setItem('GlobalData', 'LGWarList', warList, 'LGToolData');
+  }
+
   document.querySelector('.current-war').innerHTML = warID;
   await renderHistorySelector()
   await renderAllianceSelector()
@@ -40,7 +47,7 @@ const saveHistory = (data) => {
 }
 
 const renderProfileSelector = async () => {
-  const profileList = JSON.parse(window.localStorage.getItem("profileList")) || []
+  const profileList = await storage.getItem('GlobalData', 'profileList', 'LGToolData') || JSON.parse(window.localStorage.getItem("profileList")) || []
   const profileSelector = document.querySelector('#profile')
 
   profileSelector.querySelectorAll('option').forEach(o => profileSelector.removeChild(o))
@@ -63,8 +70,6 @@ const renderProfileSelector = async () => {
   profileSelector.appendChild(addProfileOption);
 
   profileSelector.querySelector(`option[value=${lastUsedProfile}]`).selected = true;
-  
- 
 }
 
 const renderHistorySelector = async (alliance = "") => {
@@ -207,7 +212,7 @@ const generateTable = async (data, shouldSave=false) => {
 
 const displayLastReport = () => {
     storage.getItem(storage.storeName, document.querySelector('#history option:last-child').value).then(r => {
-        if(r) generateTable(r)
+        if(r) {generateTable(r)} else {  document.querySelector('.result').innerHTML=""}
     })
 }
 

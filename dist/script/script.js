@@ -1,18 +1,20 @@
 let data;
-let lastUsedProfile = window.localStorage.getItem("lastUsedProfile") || 'WAR'
-let warID = `${lastUsedProfile}_${getLastMonday()}`
+let warList;
+let warID
 let currentAllianceFilter = ""
-storage.storeName = warID;
+let lastUsedProfile
 
-let warList = JSON.parse(window.localStorage.getItem("LGWarList")) || []
-if(!warList.includes(warID)) {
-    warList.push(warID) 
-    window.localStorage.setItem("LGWarList", JSON.stringify(warList)) 
+const startup = async () => {
+    lastUsedProfile = await storage.getItem('GlobalData', 'lastUsedProfile', 'LGToolData') || window.localStorage.getItem("lastUsedProfile") || 'WAR';
+    warID = `${lastUsedProfile}_${getLastMonday()}`
+    storage.storeName = warID;
 }
+
 
 document.addEventListener('DOMContentLoaded', async () => {
     
-    init();
+    await startup();
+    await init();
 
     // You paste the data
     document.addEventListener('paste', async (e) => {
@@ -44,17 +46,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     // You add a profile
     document.querySelector('#profile').addEventListener('change', async (e) => {
         if(e.target.value === "addProfile") {
-            const currentProfleList = JSON.parse(window.localStorage.getItem("profileList")) || []
+            const currentProfleList = await storage.getItem('GlobalData', 'profileList', 'LGToolData') || JSON.parse(window.localStorage.getItem("profileList")) || [];
             newProfile = window.prompt('Name your profile\nLike your current alliance name', '');
-            window.localStorage.setItem("profileList", JSON.stringify([...currentProfleList, newProfile]))
-            renderProfileSelector();
+            storage.setItem('GlobalData', 'profileList', [...currentProfleList, newProfile], 'LGToolData')
+            await renderProfileSelector();
             document.querySelector(`#profile option[value=${newProfile}]`).selected = true
         }
 
         lastUsedProfile = e.target.value
         warID = `${lastUsedProfile}_${getLastMonday()}`
         storage.storeName = warID;
-        window.localStorage.setItem("lastUsedProfile", lastUsedProfile)
+        // window.localStorage.setItem("lastUsedProfile", lastUsedProfile)
+        storage.setItem('GlobalData', 'lastUsedProfile', lastUsedProfile, 'LGToolData')
 
         // Reinit All
         init()
@@ -68,13 +71,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.querySelector('#close_modal').addEventListener('click', async (e) => {
         document.querySelector('#instruction').close()
     })
-
-    // document.querySelector('#clearData').addEventListener('click', () => {
-    //   window.localStorage.removeItem('LGAnalysisHistory');
-    //   history = []
-    //   renderHistorySelector();
-    // })
-    
-    
+  
     
 })
