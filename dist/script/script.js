@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         displayLastReport()
     })
 
-    // You add a profile
+    // You add/select a profile
     document.querySelector('#profile').addEventListener('change', async (e) => {
         if(e.target.value === "addProfile") {
             const currentProfleList = await storage.getItem('GlobalData', 'profileList', 'LGToolData') || JSON.parse(window.localStorage.getItem("profileList")) || [];
@@ -64,7 +64,26 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     })
 
-    // Open feature listing
+    // You select a previous War
+    document.querySelector('#previous_war_list').addEventListener('change', async (e) => {
+        storage.storeName = e.target.value;
+        warID = e.target.value
+
+        // Make textarea readonly for closed War 
+        const dataTextarea = document.querySelector('#data')
+        if( warID.includes( getLastMonday() ) ) {
+            dataTextarea.placeholder = "Paste here the get_member request response"
+            dataTextarea.disabled = false
+        } else {
+            dataTextarea.placeholder = "This war is over, impossible to add new reports"
+            dataTextarea.disabled = true
+        }
+
+        // Reinit All
+        init()
+    })
+
+    // Open/Close feature listing
     document.querySelector('#open_modal').addEventListener('click', async (e) => {
         document.querySelector('#instruction').showModal()
     })

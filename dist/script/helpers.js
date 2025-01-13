@@ -6,11 +6,29 @@ const init = async () => {
       storage.setItem('GlobalData', 'LGWarList', warList, 'LGToolData');
   }
 
-  document.querySelector('.current-war').innerHTML = warID;
+  // document.querySelector('.current-war').innerHTML = warID;
+  getCurrentProfileWarlist()
+
   await renderHistorySelector()
   await renderAllianceSelector()
   renderProfileSelector()
   displayLastReport()
+}
+
+const getCurrentProfileWarlist = () => {
+  const warListSelector = document.querySelector('#previous_war_list')
+  const filteredWarList = warList.filter(w => w.startsWith(lastUsedProfile)).sort()
+  
+  warListSelector.querySelectorAll('option').forEach(o => warListSelector.removeChild(o))
+
+  for( war of filteredWarList ) {
+    const warOption = document.createElement("option")
+    warOption.appendChild(document.createTextNode(war))
+    warOption.value = war
+    warListSelector.appendChild(warOption);
+  }
+
+  warListSelector.querySelector(`option[value=${warID}]`).selected = true;
 }
 
 const getLastMonday = () => {

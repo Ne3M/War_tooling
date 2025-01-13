@@ -9,7 +9,7 @@
 [x] Add diesel table  
 [x] Add entry point  
 [x] Publish on netlify  
+[x] Store warlist and profileList in indexedDB
 
 [ ] Add estimation of remaining troops  
-[ ] Store warlist and profileList in indexedDB
 [ ] Allow to review old wars
