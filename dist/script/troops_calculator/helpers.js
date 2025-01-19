@@ -18,8 +18,8 @@ const updateUnitCostLine = (currentUnit, recalculate = false) => {
     const coreCost = troopsData[desiredLevel-1].totalCoreCost - troopsData[currentLevel-1].totalCoreCost
     const cubeCost = troopsData[desiredLevel-1].totalCubeCost - troopsData[currentLevel-1].totalCubeCost
     
-    coreCostResult.innerHTML = (coreCost > 0) ? coreCost : "-";
-    cubeCostResult.innerHTML = (cubeCost > 0) ? cubeCost : "-";
+    coreCostResult.innerHTML = (coreCost > 0) ? coreCost : "0";
+    cubeCostResult.innerHTML = (cubeCost > 0) ? cubeCost : "0";
     currentPowerResult.innerHTML = Math.floor(troopsData[currentLevel-1].powerBase * rarityMultiplier[rarity] * mercBonus)
     newPowerResult.innerHTML = Math.floor(troopsData[desiredLevel-1].powerBase * rarityMultiplier[rarity] * mercBonus)
 
