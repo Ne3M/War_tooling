@@ -219,3 +219,197 @@ body {
   margin-bottom: 0.5rem;
   margin-left: -1rem;
 }
+
+
+
+
+/*--------------------------------------*/
+.troops main {
+  display: block;;
+}
+.troops header {
+  margin-bottom: 1rem;
+}
+
+.ressources {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 2.66%;
+}
+.ressources div {
+  width: 23%;
+}
+.ressources img {
+  max-width: 36px;
+  height: auto;
+  margin-right: .75rem;
+  vertical-align: bottom;
+  float: left;
+}
+.ressources input {
+  display: block;
+  width: calc(100% - 60px);
+}
+
+.warpower {
+  margin: 1rem 0;
+  background: #292929;
+  padding: 1rem;
+  text-align: center;
+  border-radius: 5px;
+  color: #fff;
+}
+.warpower img {
+  height: 40px;
+  width: auto;
+}
+.warpower span img {
+  height: 20px;
+  width: auto;
+  margin: 0 1rem;
+}
+.warpower div :is(img, span) {
+  vertical-align: middle;
+  margin-right: .5rem;
+}
+
+
+
+.troops_selector {
+  display: flex;
+  gap: .5%;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.unit:not(:first-of-type) {
+  display: nsone;
+}
+
+.unit.premium {
+  opacity: .5;
+  display: none;
+}
+.unit.premium .upgrade_costs {
+  display: none;
+}
+
+.unit {
+  box-sizing: border-box;
+  padding: 1rem;
+  background: #292929;
+  color: #fff;
+  border-radius: 3px;
+  width: 24%;
+  flex-grow: 1;
+}
+.unit.most_effective {
+  box-shadow: 0 0 15px orange;
+  outline: 2px orange solid
+}
+
+.unit img {
+  max-height: 38px;
+  height: auto;
+  width: auto;
+  display: inline-block;
+  display: block;
+  margin: 0 auto 1rem;
+}
+.unit input {
+  appearance: textfield;
+  width: 50px;
+  height: 2rem;
+  font-weight: bold;
+  font-size: 1.5rem;
+  padding: 0 0 0 5px;
+  vertical-align: sub;
+  margin-left: .375rem;
+  text-align: left;
+  background: none;
+  color: #fff;
+  border-radius: 5px;
+  border: 1px solid #fff2;
+}
+.unit input:invalid {
+  box-shadow: 0 0 5px red;
+}
+.unit input::placeholder {
+  font-size: .75rem;
+  color: #999;
+}
+.unit label { 
+  font-weight: bold;
+  font-size: 1rem;
+  margin: 0;
+  height: 2rem;
+  line-height: 2.4;
+}
+.unit div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: .5rem;
+}
+.unit div img {
+  margin: 0 .5rem;
+  height: 1.5rem;
+}
+
+.unit .unit_type img {
+  max-height: 36px;
+  height: auto;
+}
+.unit_type .merc_level_selector {
+  background: none;
+  color: #fff;
+  font-size: 1.25rem;
+  font-weight: bold;
+  border: 1px solid #fff2;
+  padding: 0.25rem;
+  border-radius: 5px;
+  text-align: center;
+}
+.unit_type .merc_level_selector option {
+  background: #292929;
+  cursor: pointer;
+}
+
+
+.unit_level {
+  padding-top: 1rem;
+  border-top: 1px solid #fff3;
+}
+.unit_level :is(label, input):is(:last-of-type) {
+  color: #6bf468;
+}
+.unit_level, .unit_level input {
+  text-shadow: 0 0 5px #000;
+}
+.upgrade_costs .cost_value,
+.power_up .power_value {
+  font-weight: bold;
+  font-size: 1.25rem;
+  margin: 0;
+  height: 2rem;
+  line-height: 2.4rem;
+}
+.power_up .new_power {
+  color: #6bf468;
+}
+
+.upgrade_costs {
+  margin-top: 2rem;
+}
+.unit .upgrade_costs img {
+  height: 2rem;
+}
+.upgrade_costs .cost_value {
+  line-height: 2rem;
+}
+
+.spacer {
+  width: 1rem;
+  display: inline-block;
+}

@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Troops Calculator</title>
+    <link rel="stylesheet" href="style/style.css" />
+
+    <script src="script/storage.js"></script>
+    <script src="script/troops_calculator/data.js"></script>
+    <script src="script/troops_calculator/helpers.js"></script>
+    <script src="script/troops_calculator/script.js" defer></script>
+</head>
+<body class="troops">
+
+    <header>
+        <h1>Troops Calculator</h1>
+
+        <div class="ressources">
+            <div><label for="tankCores"><img src="images/tank_core.png" width="66" height="68" alt=""><span>Tank Cores</span> <input name="tankCores" type="text" value="0" /></label></div>
+            <div><label for="mechCore"><img src="images/mech_core.png" width="66" height="68" alt=""><span>Mech Cores</span> <input name="mechCore" type="text" value="0" /></label></div>
+            <div><label for="airCores"><img src="images/air_core.png" width="66" height="68" alt=""><span>Air Cores</span> <input name="airCores" type="text" value="0" /></label></div>
+            <div><label for="cube"><img src="images/cube.png" alt=""><span>Cubes</span> <input name="cube" type="text" value="0" /></label></div>
+        </div>
+
+        <div class="warpower">
+
+            <div class="power_up">
+                <img src="images/power.png" width="66" height="68" alt="">
+                <span class="power_value current_power">0</span>
+                <span><img src="images/arrow.png" width="46" height="41"></span>
+                <img src="images/power_up.png" alt="">
+                <span class="power_value new_power">0</span>
+            </div>
+            <div class="upgrade_costs">
+                <img src="images/tank_core.png" width="66" height="68" alt="">
+                <span class="cost_value total_tankcore_cost">0</span>
+                <span class="spacer"></span>
+                <img src="images/mech_core.png" width="66" height="68" alt="">
+                <span class="cost_value total_mechcore_cost">0</span>
+                <span class="spacer"></span>
+                <img src="images/air_core.png" width="66" height="68" alt="">
+                <span class="cost_value total_aircore_cost">0</span>
+                <span class="spacer"></span>
+                <img src="images/cube.png" alt="">
+                <span class="cost_value total_cube_cost">0</span>
+            </div>
+            
+
+        </div>
+    </header>
+
+    <main>
+        <div class="troops_selector">
+            <fieldset class="unit" data-rarity="common" data-type="tank">
+                <div class="unit_type">
+                    <img src="images/common_tank.png" width="454" height="96" alt="">
+                    <select class="merc_level_selector">
+                        <option value="0">0</option>
+                        <option value="1">1% </option>
+                        <option value="2">2% </option>
+                        <option value="3">3% </option>
+                        <option value="5">5% </option>
+                        <option value="8">8% </option>
+                        <option value="10">10%</option>
+                        <option value="12">12%</option>
+                        <option value="15">15%</option>
+                    </select>
+                </div>
+                <div class="unit_level">
+                    <label>LV</label>
+                    <input type="number" name="common_tank_1_lvl" id="common_tank_1_lvl" placeholder="Current level" value="1" value="1" />
+                    <img src="images/arrow.png" width="46" height="41">
+                    <label>LV</label>
+                    <input type="number" name="common_tank_1_flvl" id="common_tank_1_flvl" placeholder="Desired level" value="2" min="1" max="400" />
+                </div>
+                <div class="power_up">
+                    <img src="images/power.png" width="66" height="68" alt="">
+                    <span class="power_value current_power">1250</span>
+                    <span><img src="images/arrow.png" width="46" height="41"></span>
+                    <img src="images/power_up.png" alt="">
+                    <span class="power_value new_power">1355</span>
+                </div>
+                <div class="upgrade_costs">
+                    <img src="images/tank_core.png" width="66" height="68" alt="">
+                    <span class="cost_value total_core_cost">25000</span>
+                    <span class="spacer"></span>
+                    <img src="images/cube.png" alt="">
+                    <span class="cost_value total_cube_cost">1220</span>
+                </div>
+            </fieldset>
+            <fieldset class="unit" data-rarity="common" data-type="tank">
+                <div class="unit_type">
+                    <img src="images/common_tank.png" width="454" height="96" alt="">
+                    <select class="merc_level_selector">
+                        <option value="0">0</option>
+                        <option value="1">1% </option>
+                        <option value="2">2% </option>
+                        <option value="3">3% </option>
+                        <option value="5">5% </option>
+                        <option value="8">8% </option>
+                        <option value="10">10%</option>
+                        <option value="12">12%</option>
+                        <option value="15">15%</option>
+                    </select>
+                </div>
+                <div class="unit_level">
+                    <label>LV</label>
+                    <input type="number" name="common_tank_2_lvl" id="common_tank_2_lvl" placeholder="Current level" value="1" value="1" />
+                    <img src="images/arrow.png" width="46" height="41">
+                    <label>LV</label>
+                    <input type="number" name="common_tank_2_flvl" id="common_tank_2_flvl" placeholder="Desired level" value="2" max="400" />
+                </div>
+                <div class="power_up">
+                    <img src="images/power.png" width="66" height="68" alt="">
+                    <span class="power_value current_power">1250</span>
+                    <span><img src="images/arrow.png" width="46" height="41"></span>
+                    <img src="images/power_up.png" alt="">
+                    <span class="power_value new_power">1355</span>
+                </div>
+                <div class="upgrade_costs">
+                    <img src="images/tank_core.png" width="66" height="68" alt="">
+                    <span class="cost_value total_core_cost">25000</span>
+                    <span class="spacer"></span>
+                    <img src="images/cube.png" alt="">
+                    <span class="cost_value total_cube_cost">1220</span>
+                </div>
+            </fieldset>
+            <fieldset class="unit" data-rarity="common" data-type="mech">
+                <div class="unit_type">
+                    <img src="images/common_mech.png" width="454" height="96" alt="">
+                    <select class="merc_level_selector">
+                        <option value="0">0</option>
+                        <option value="1">1% </option>
+                        <option value="2">2% </option>
+                        <option value="3">3% </option>
+                        <option value="5">5% </option>
+                        <option value="8">8% </option>
+                        <option value="10">10%</option>
+                        <option value="12">12%</option>
+                        <option value="15">15%</option>
+                    </select>
+                </div>
+                <div class="unit_level">
+                    <label>LV</label>
+                    <input type="number" name="common_mech_1_lvl" id="common_mech_1_lvl" placeholder="Current level" value="1" value="1" />
+                    <img src="images/arrow.png" width="46" height="41">
+                    <label>LV</label>
+                    <input type="number" name="common_mech_1_flvl" id="common_mech_1_flvl" placeholder="Desired level" value="2" max="400" />
+                </div>
+                <div class="power_up">
+                    <img src="images/power.png" width="66" height="68" alt="">
+                    <span class="power_value current_power">1250</span>
+                    <span><img src="images/arrow.png" width="46" height="41"></span>
+                    <img src="images/power_up.png" alt="">
+                    <span class="power_value new_power">1355</span>
+                </div>
+                <div class="upgrade_costs">
+                    <img src="images/mech_core.png" width="66" height="68" alt="">
+                    <span class="cost_value total_core_cost">25000</span>
+                    <span class="spacer"></span>
+                    <img src="images/cube.png" alt="">
+                    <span class="cost_value total_cube_cost">1220</span>
+                </div>
+            </fieldset>
+            <fieldset class="unit" data-rarity="common" data-type="mech">
+                <div class="unit_type">
+                    <img src="images/common_mech.png" width="454" height="96" alt="">
+                    <select class="merc_level_selector">
+                        <option value="0">0</option>
+                        <option value="1">1% </option>
+                        <option value="2">2% </option>
+                        <option value="3">3% </option>
+                        <option value="5">5% </option>
+                        <option value="8">8% </option>
+                        <option value="10">10%</option>
+                        <option value="12">12%</option>
+                        <option value="15">15%</option>
+                    </select>
+                </div>
+                <div class="unit_level">
+                    <label>LV</label>
+                    <input type="number" name="common_mech_2_lvl" id="common_mech_2_lvl" placeholder="Current level" value="1" value="1" />
+                    <img src="images/arrow.png" width="46" height="41">
+                    <label>LV</label>
+                    <input type="number" name="common_mech_2_flvl" id="common_mech_2_flvl" placeholder="Desired level" value="2" max="400" />
+                </div>
+                <div class="power_up">
+                    <img src="images/power.png" width="66" height="68" alt="">
+                    <span class="power_value current_power">1250</span>
+                    <span><img src="images/arrow.png" width="46" height="41"></span>
+                    <img src="images/power_up.png" alt="">
+                    <span class="power_value new_power">1355</span>
+                </div>
+                <div class="upgrade_costs">
+                    <img src="images/mech_core.png" width="66" height="68" alt="">
+                    <span class="cost_value total_core_cost">25000</span>
+                    <span class="spacer"></span>
+                    <img src="images/cube.png" alt="">
+                    <span class="cost_value total_cube_cost">1220</span>
+                </div>
+            </fieldset>
+            <fieldset class="unit" data-rarity="common" data-type="air">
+                <div class="unit_type">
+                    <img src="images/common_air.png" width="454" height="96" alt="">
+                    <select class="merc_level_selector">
+                        <option value="0">0</option>
+                        <option value="1">1% </option>
+                        <option value="2">2% </option>
+                        <option value="3">3% </option>
+                        <option value="5">5% </option>
+                        <option value="8">8% </option>
+                        <option value="10">10%</option>
+                        <option value="12">12%</option>
+                        <option value="15">15%</option>
+                    </select>
+                </div>
+                <div class="unit_level">
+                    <label>LV</label>
+                    <input type="number" name="common_air_1_lvl" id="common_air_1_lvl" placeholder="Current level" value="1" value="1" />
+                    <img src="images/arrow.png" width="46" height="41">
+                    <label>LV</label>
+                    <input type="number" name="common_air_1_flvl" id="common_air_1_flvl" placeholder="Desired level" value="2" max="400" />
+                </div>
+                <div class="power_up">
+                    <img src="images/power.png" width="66" height="68" alt="">
+                    <span class="power_value current_power">1250</span>
+                    <span><img src="images/arrow.png" width="46" height="41"></span>
+                    <img src="images/power_up.png" alt="">
+                    <span class="power_value new_power">1355</span>
+                </div>
+                <div class="upgrade_costs">
+                    <img src="images/air_core.png" width="66" height="68" alt="">
+                    <span class="cost_value total_core_cost">25000</span>
+                    <span class="spacer"></span>
+                    <img src="images/cube.png" alt="">
+                    <span class="cost_value total_cube_cost">1220</span>
+                </div>
+            </fieldset>
+            <fieldset class="unit" data-rarity="common" data-type="air">
+                <div class="unit_type">
+                    <img src="images/common_air.png" width="454" height="96" alt="">
+                    <select class="merc_level_selector">
+                        <option value="0">0</option>
+                        <option value="1">1% </option>
+                        <option value="2">2% </option>
+                        <option value="3">3% </option>
+                        <option value="5">5% </option>
+                        <option value="8">8% </option>
+                        <option value="10">10%</option>
+                        <option value="12">12%</option>
+                        <option value="15">15%</option>
+                    </select>
+                </div>
+                <div class="unit_level">
+                    <label>LV</label>
+                    <input type="number" name="common_air_2_lvl" id="common_air_2_lvl" placeholder="Current level" value="1" value="1" />
+                    <img src="images/arrow.png" width="46" height="41">
+                    <label>LV</label>
+                    <input type="number" name="common_air_2_flvl" id="common_air_2_flvl" placeholder="Desired level" value="2" max="400" />
+                </div>
+                <div class="power_up">
+                    <img src="images/power.png" width="66" height="68" alt="">
+                    <span class="power_value current_power">1250</span>
+                    <span><img src="images/arrow.png" width="46" height="41"></span>
+                    <img src="images/power_up.png" alt="">
+                    <span class="power_value new_power">1355</span>
+                </div>
+                <div class="upgrade_costs">
+                    <img src="images/air_core.png" width="66" height="68" alt="">
+                    <span class="cost_value total_core_cost">25000</span>
+                    <span class="spacer"></span>
+                    <img src="images/cube.png" alt="">
+                    <span class="cost_value total_cube_cost">1220</span>
+                </div>
+            </fieldset>
+
+            <fieldset class="unit premium" data-rarity="rare" data-type="tank">
+                <div class="unit_type">
+                    <img src="images/rare_tank.png" width="454" height="96" alt="">
+                    <select class="merc_level_selector">
+                        <option value="0">0</option>
+                        <option value="1">1% </option>
+                        <option value="2">2% </option>
+                        <option value="3">3% </option>
+                        <option value="5">5% </option>
+                        <option value="8">8% </option>
+                        <option value="10">10%</option>
+                        <option value="12">12%</option>
+                        <option value="15">15%</option>
+                    </select>
+                </div>
+                <div class="unit_level">
+                    <label>LV</label>
+                    <input type="number" name="rare_tank_1_lvl" id="rare_tank_1_lvl" placeholder="Current level" value="1" value="1" />
+                    <img src="images/arrow.png" width="46" height="41">
+                    <label>LV</label>
+                    <input type="number" name="rare_tank_1_flvl" id="rare_tank_1_flvl" placeholder="Desired level" value="2" max="400" />
+                </div>
+                <div class="power_up">
+                    <img src="images/power.png" width="66" height="68" alt="">
+                    <span class="power_value current_power">1250</span>
+                    <span><img src="images/arrow.png" width="46" height="41"></span>
+                    <img src="images/power_up.png" alt="">
+                    <span class="power_value new_power">1355</span>
+                </div>
+                <div class="upgrade_costs">
+                    <img src="images/tank_core.png" width="66" height="68" alt="">
+                    <span class="cost_value total_core_cost">25000</span>
+                    <span class="spacer"></span>
+                    <img src="images/cube.png" alt="">
+                    <span class="cost_value total_cube_cost">1220</span>
+                </div>
+            </fieldset>
+            <fieldset class="unit premium" data-rarity="rare" data-type="tank">
+                <div class="unit_type">
+                    <img src="images/rare_tank.png" width="454" height="96" alt="">
+                    <select class="merc_level_selector">
+                        <option value="0">0</option>
+                        <option value="1">1% </option>
+                        <option value="2">2% </option>
+                        <option value="3">3% </option>
+                        <option value="5">5% </option>
+                        <option value="8">8% </option>
+                        <option value="10">10%</option>
+                        <option value="12">12%</option>
+                        <option value="15">15%</option>
+                    </select>
+                </div>
+                <div class="unit_level">
+                    <label>LV</label>
+                    <input type="number" name="rare_tank_2_lvl" id="rare_tank_2_lvl" placeholder="Current level" value="1" value="1" />
+                    <img src="images/arrow.png" width="46" height="41">
+                    <label>LV</label>
+                    <input type="number" name="rare_tank_2_flvl" id="rare_tank_2_flvl" placeholder="Desired level" value="2" max="400" />
+                </div>
+                <div class="power_up">
+                    <img src="images/power.png" width="66" height="68" alt="">
+                    <span class="power_value current_power">1250</span>
+                    <span><img src="images/arrow.png" width="46" height="41"></span>
+                    <img src="images/power_up.png" alt="">
+                    <span class="power_value new_power">1355</span>
+                </div>
+                <div class="upgrade_costs">
+                    <img src="images/tank_core.png" width="66" height="68" alt="">
+                    <span class="cost_value total_core_cost">25000</span>
+                    <span class="spacer"></span>
+                    <img src="images/cube.png" alt="">
+                    <span class="cost_value total_cube_cost">1220</span>
+                </div>
+            </fieldset>
+            <fieldset class="unit" data-rarity="rare" data-type="mech">
+                <div class="unit_type">
+                    <img src="images/rare_mech.png" width="454" height="96" alt="">
+                    <select class="merc_level_selector">
+                        <option value="0">0</option>
+                        <option value="1">1% </option>
+                        <option value="2">2% </option>
+                        <option value="3">3% </option>
+                        <option value="5">5% </option>
+                        <option value="8">8% </option>
+                        <option value="10">10%</option>
+                        <option value="12">12%</option>
+                        <option value="15">15%</option>
+                    </select>
+                </div>
+                <div class="unit_level">
+                    <label>LV</label>
+                    <input type="number" name="rare_mech_lvl" id="rare_mech_lvl" placeholder="Current level" value="1" value="1" />
+                    <img src="images/arrow.png" width="46" height="41">
+                    <label>LV</label>
+                    <input type="number" name="rare_mech_flvl" id="rare_mech_flvl" placeholder="Desired level" value="2" max="400" />
+                </div>
+                <div class="power_up">
+                    <img src="images/power.png" width="66" height="68" alt="">
+                    <span class="power_value current_power">1250</span>
+                    <span><img src="images/arrow.png" width="46" height="41"></span>
+                    <img src="images/power_up.png" alt="">
+                    <span class="power_value new_power">1355</span>
+                </div>
+                <div class="upgrade_costs">
+                    <img src="images/mech_core.png" width="66" height="68" alt="">
+                    <span class="cost_value total_core_cost">25000</span>
+                    <span class="spacer"></span>
+                    <img src="images/cube.png" alt="">
+                    <span class="cost_value total_cube_cost">1220</span>
+                </div>
+            </fieldset>
+            <fieldset class="unit" data-rarity="rare" data-type="air">
+                <div class="unit_type">
+                    <img src="images/rare_air.png" width="454" height="96" alt="">
+                    <select class="merc_level_selector">
+                        <option value="0">0</option>
+                        <option value="1">1% </option>
+                        <option value="2">2% </option>
+                        <option value="3">3% </option>
+                        <option value="5">5% </option>
+                        <option value="8">8% </option>
+                        <option value="10">10%</option>
+                        <option value="12">12%</option>
+                        <option value="15">15%</option>
+                    </select>
+                </div>
+                <div class="unit_level">
+                    <label>LV</label>
+                    <input type="number" name="rare_air_lvl" id="rare_air_lvl" placeholder="Current level" value="1" value="1" />
+                    <img src="images/arrow.png" width="46" height="41">
+                    <label>LV</label>
+                    <input type="number" name="rare_air_flvl" id="rare_air_flvl" placeholder="Desired level" value="2" max="400" />
+                </div>
+                <div class="power_up">
+                    <img src="images/power.png" width="66" height="68" alt="">
+                    <span class="power_value current_power">1250</span>
+                    <span><img src="images/arrow.png" width="46" height="41"></span>
+                    <img src="images/power_up.png" alt="">
+                    <span class="power_value new_power">1355</span>
+                </div>
+                <div class="upgrade_costs">
+                    <img src="images/air_core.png" width="66" height="68" alt="">
+                    <span class="cost_value total_core_cost">25000</span>
+                    <span class="spacer"></span>
+                    <img src="images/cube.png" alt="">
+                    <span class="cost_value total_cube_cost">1220</span>
+                </div>
+            </fieldset>
+
+            <fieldset class="unit" data-rarity="epic" data-type="tank">
+                <div class="unit_type">
+                    <img src="images/epic_tank.png" width="454" height="96" alt="">
+                    <select class="merc_level_selector">
+                        <option value="0">0</option>
+                        <option value="1">1% </option>
+                        <option value="2">2% </option>
+                        <option value="3">3% </option>
+                        <option value="5">5% </option>
+                        <option value="8">8% </option>
+                        <option value="10">10%</option>
+                        <option value="12">12%</option>
+                        <option value="15">15%</option>
+                    </select>
+                </div>
+                <div class="unit_level">
+                    <label>LV</label>
+                    <input type="number" name="epic_tank_lvl" id="epic_tank_lvl" placeholder="Current level" value="1" value="1" />
+                    <img src="images/arrow.png" width="46" height="41">
+                    <label>LV</label>
+                    <input type="number" name="epic_tank_flvl" id="epic_tank_flvl" placeholder="Desired level" value="2" max="400" />
+                </div>
+                <div class="power_up">
+                    <img src="images/power.png" width="66" height="68" alt="">
+                    <span class="power_value current_power">1250</span>
+                    <span><img src="images/arrow.png" width="46" height="41"></span>
+                    <img src="images/power_up.png" alt="">
+                    <span class="power_value new_power">1355</span>
+                </div>
+                <div class="upgrade_costs">
+                    <img src="images/tank_core.png" width="66" height="68" alt="">
+                    <span class="cost_value total_core_cost">25000</span>
+                    <span class="spacer"></span>
+                    <img src="images/cube.png" alt="">
+                    <span class="cost_value total_cube_cost">1220</span>
+                </div>
+            </fieldset>
+            <fieldset class="unit premium" data-rarity="epic" data-type="mech">
+                <div class="unit_type">
+                    <img src="images/epic_mech.png" width="454" height="96" alt="">
+                    <select class="merc_level_selector">
+                        <option value="0">0</option>
+                        <option value="1">1% </option>
+                        <option value="2">2% </option>
+                        <option value="3">3% </option>
+                        <option value="5">5% </option>
+                        <option value="8">8% </option>
+                        <option value="10">10%</option>
+                        <option value="12">12%</option>
+                        <option value="15">15%</option>
+                    </select>
+                </div>
+                <div class="unit_level">
+                    <label>LV</label>
+                    <input type="number" name="epic_mech_1_lvl" id="rare_tank_1_lvl" placeholder="Current level" value="1" value="1" />
+                    <img src="images/arrow.png" width="46" height="41">
+                    <label>LV</label>
+                    <input type="number" name="rare_tank_1_flvl" id="rare_tank_1_flvl" placeholder="Desired level" value="2" max="400" />
+                </div>
+                <div class="power_up">
+                    <img src="images/power.png" width="66" height="68" alt="">
+                    <span class="power_value current_power">1250</span>
+                    <span><img src="images/arrow.png" width="46" height="41"></span>
+                    <img src="images/power_up.png" alt="">
+                    <span class="power_value new_power">1355</span>
+                </div>
+                <div class="upgrade_costs">
+                    <img src="images/mech_core.png" width="66" height="68" alt="">
+                    <span class="cost_value total_core_cost">25000</span>
+                    <span class="spacer"></span>
+                    <img src="images/cube.png" alt="">
+                    <span class="cost_value total_cube_cost">1220</span>
+                </div>
+            </fieldset>
+            <fieldset class="unit premium" data-rarity="epic" data-type="mech">
+                <div class="unit_type">
+                    <img src="images/epic_mech.png" width="454" height="96" alt="">
+                    <select class="merc_level_selector">
+                        <option value="0">0</option>
+                        <option value="1">1% </option>
+                        <option value="2">2% </option>
+                        <option value="3">3% </option>
+                        <option value="5">5% </option>
+                        <option value="8">8% </option>
+                        <option value="10">10%</option>
+                        <option value="12">12%</option>
+                        <option value="15">15%</option>
+                    </select>
+                </div>
+                <div class="unit_level">
+                    <label>LV</label>
+                    <input type="number" name="epic_mech_2_lvl" id="epic_mech_2_lvl" placeholder="Current level" value="1" value="1" />
+                    <img src="images/arrow.png" width="46" height="41">
+                    <label>LV</label>
+                    <input type="number" name="epic_mech_2_flvl" id="epic_mech_2_flvl" placeholder="Desired level" value="2" max="400" />
+                </div>
+                <div class="power_up">
+                    <img src="images/power.png" width="66" height="68" alt="">
+                    <span class="power_value current_power">1250</span>
+                    <span><img src="images/arrow.png" width="46" height="41"></span>
+                    <img src="images/power_up.png" alt="">
+                    <span class="power_value new_power">1355</span>
+                </div>
+                <div class="upgrade_costs">
+                    <img src="images/mech_core.png" width="66" height="68" alt="">
+                    <span class="cost_value total_core_cost">25000</span>
+                    <span class="spacer"></span>
+                    <img src="images/cube.png" alt="">
+                    <span class="cost_value total_cube_cost">1220</span>
+                </div>
+            </fieldset>
+            <fieldset class="unit" data-rarity="epic" data-type="air">
+                <div class="unit_type">
+                    <img src="images/epic_air.png" width="454" height="96" alt="">
+                    <select class="merc_level_selector">
+                        <option value="0">0</option>
+                        <option value="1">1% </option>
+                        <option value="2">2% </option>
+                        <option value="3">3% </option>
+                        <option value="5">5% </option>
+                        <option value="8">8% </option>
+                        <option value="10">10%</option>
+                        <option value="12">12%</option>
+                        <option value="15">15%</option>
+                    </select>
+                </div>
+                <div class="unit_level">
+                    <label>LV</label>
+                    <input type="number" name="epic_air_lvl" id="epic_air_lvl" placeholder="Current level" value="1" value="1" />
+                    <img src="images/arrow.png" width="46" height="41">
+                    <label>LV</label>
+                    <input type="number" name="epic_air_flvl" id="epic_air_flvl" placeholder="Desired level" value="2" max="400" />
+                </div>
+                <div class="power_up">
+                    <img src="images/power.png" width="66" height="68" alt="">
+                    <span class="power_value current_power">1250</span>
+                    <span><img src="images/arrow.png" width="46" height="41"></span>
+                    <img src="images/power_up.png" alt="">
+                    <span class="power_value new_power">1355</span>
+                </div>
+                <div class="upgrade_costs">
+                    <img src="images/air_core.png" width="66" height="68" alt="">
+                    <span class="cost_value total_core_cost">25000</span>
+                    <span class="spacer"></span>
+                    <img src="images/cube.png" alt="">
+                    <span class="cost_value total_cube_cost">1220</span>
+                </div>
+            </fieldset>
+
+            <fieldset class="unit" data-rarity="lego" data-type="tank">
+                <div class="unit_type">
+                    <img src="images/lego_tank.png" width="454" height="96" alt="">
+                    <select class="merc_level_selector">
+                        <option value="0">0</option>
+                        <option value="1">1% </option>
+                        <option value="2">2% </option>
+                        <option value="3">3% </option>
+                        <option value="5">5% </option>
+                        <option value="8">8% </option>
+                        <option value="10">10%</option>
+                        <option value="12">12%</option>
+                        <option value="15">15%</option>
+                    </select>
+                </div>
+                <div class="unit_level">
+                    <label>LV</label>
+                    <input type="number" name="lego_tank_lvl" id="lego_tank_lvl" placeholder="Current level" value="1" value="1" />
+                    <img src="images/arrow.png" width="46" height="41">
+                    <label>LV</label>
+                    <input type="number" name="lego_tank_flvl" id="lego_tank_flvl" placeholder="Desired level" value="2" max="400" />
+                </div>
+                <div class="power_up">
+                    <img src="images/power.png" width="66" height="68" alt="">
+                    <span class="power_value current_power">1250</span>
+                    <span><img src="images/arrow.png" width="46" height="41"></span>
+                    <img src="images/power_up.png" alt="">
+                    <span class="power_value new_power">1355</span>
+                </div>
+                <div class="upgrade_costs">
+                    <img src="images/tank_core.png" width="66" height="68" alt="">
+                    <span class="cost_value total_core_cost">25000</span>
+                    <span class="spacer"></span>
+                    <img src="images/cube.png" alt="">
+                    <span class="cost_value total_cube_cost">1220</span>
+                </div>
+            </fieldset>
+            <fieldset class="unit" data-rarity="lego" data-type="mech">
+                <div class="unit_type">
+                    <img src="images/lego_mech.png" width="454" height="96" alt="">
+                    <select class="merc_level_selector">
+                        <option value="0">0</option>
+                        <option value="1">1% </option>
+                        <option value="2">2% </option>
+                        <option value="3">3% </option>
+                        <option value="5">5% </option>
+                        <option value="8">8% </option>
+                        <option value="10">10%</option>
+                        <option value="12">12%</option>
+                        <option value="15">15%</option>
+                    </select>
+                </div>
+                <div class="unit_level">
+                    <label>LV</label>
+                    <input type="number" name="lego_mech_lvl" id="lego_mech_lvl" placeholder="Current level" value="1" value="1" />
+                    <img src="images/arrow.png" width="46" height="41">
+                    <label>LV</label>
+                    <input type="number" name="lego_mech_flvl" id="lego_mech_flvl" placeholder="Desired level" value="2" max="400" />
+                </div>
+                <div class="power_up">
+                    <img src="images/power.png" width="66" height="68" alt="">
+                    <span class="power_value current_power">1250</span>
+                    <span><img src="images/arrow.png" width="46" height="41"></span>
+                    <img src="images/power_up.png" alt="">
+                    <span class="power_value new_power">1355</span>
+                </div>
+                <div class="upgrade_costs">
+                    <img src="images/mech_core.png" width="66" height="68" alt="">
+                    <span class="cost_value total_core_cost">25000</span>
+                    <span class="spacer"></span>
+                    <img src="images/cube.png" alt="">
+                    <span class="cost_value total_cube_cost">1220</span>
+                </div>
+            </fieldset>
+            <fieldset class="unit premium" data-rarity="lego" data-type="air">
+                <div class="unit_type">
+                    <img src="images/lego_air.png" width="454" height="96" alt="">
+                    <select class="merc_level_selector">
+                        <option value="0">0</option>
+                        <option value="1">1% </option>
+                        <option value="2">2% </option>
+                        <option value="3">3% </option>
+                        <option value="5">5% </option>
+                        <option value="8">8% </option>
+                        <option value="10">10%</option>
+                        <option value="12">12%</option>
+                        <option value="15">15%</option>
+                    </select>
+                </div>
+                <div class="unit_level">
+                    <label>LV</label>
+                    <input type="number" name="lego_air_1_lvl" id="lego_air_1_lvl" placeholder="Current level" value="1" value="1" />
+                    <img src="images/arrow.png" width="46" height="41">
+                    <label>LV</label>
+                    <input type="number" name="lego_air_1_flvl" id="lego_air_1_flvl" placeholder="Desired level" value="2" max="400" />
+                </div>
+                <div class="power_up">
+                    <img src="images/power.png" width="66" height="68" alt="">
+                    <span class="power_value current_power">1250</span>
+                    <span><img src="images/arrow.png" width="46" height="41"></span>
+                    <img src="images/power_up.png" alt="">
+                    <span class="power_value new_power">1355</span>
+                </div>
+                <div class="upgrade_costs">
+                    <img src="images/air_core.png" width="66" height="68" alt="">
+                    <span class="cost_value total_core_cost">25000</span>
+                    <span class="spacer"></span>
+                    <img src="images/cube.png" alt="">
+                    <span class="cost_value total_cube_cost">1220</span>
+                </div>
+            </fieldset>
+            <fieldset class="unit premium" data-rarity="lego" data-type="air">
+                <div class="unit_type">
+                    <img src="images/lego_air.png" width="454" height="96" alt="">
+                    <select class="merc_level_selector">
+                        <option value="0">0</option>
+                        <option value="1">1% </option>
+                        <option value="2">2% </option>
+                        <option value="3">3% </option>
+                        <option value="5">5% </option>
+                        <option value="8">8% </option>
+                        <option value="10">10%</option>
+                        <option value="12">12%</option>
+                        <option value="15">15%</option>
+                    </select>
+                </div>
+                <div class="unit_level">
+                    <label>LV</label>
+                    <input type="number" name="lego_air_2_lvl" id="lego_air_2_lvl" placeholder="Current level" value="1" value="1" />
+                    <img src="images/arrow.png" width="46" height="41">
+                    <label>LV</label>
+                    <input type="number" name="lego_air_2_flvl" id="lego_air_2_flvl" placeholder="Desired level" value="2" max="400" />
+                </div>
+                <div class="power_up">
+                    <img src="images/power.png" width="66" height="68" alt="">
+                    <span class="power_value current_power">1250</span>
+                    <span><img src="images/arrow.png" width="46" height="41"></span>
+                    <img src="images/power_up.png" alt="">
+                    <span class="power_value new_power">1355</span>
+                </div>
+                <div class="upgrade_costs">
+                    <img src="images/air_core.png" width="66" height="68" alt="">
+                    <span class="cost_value total_core_cost">25000</span>
+                    <span class="spacer"></span>
+                    <img src="images/cube.png" alt="">
+                    <span class="cost_value total_cube_cost">1220</span>
+                </div>
+            </fieldset>
+        </div>
+    </main>
+    
+</body>
+</html>
