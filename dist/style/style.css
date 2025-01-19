@@ -306,7 +306,22 @@ body {
 }
 .unit.most_effective {
   box-shadow: 0 0 15px orange;
-  outline: 2px orange solid
+  outline: 3px orange solid;
+  position: relative;
+}
+.unit.most_effective:after{
+  content: "★";
+  font-size: 1.5rem;
+  line-height: 1;
+  text-align: right;
+  color: #000;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  background: orange;
+  clip-path: polygon(100% 0, 0 0, 100% 100%);
 }
 
 .unit img {
@@ -395,8 +410,14 @@ body {
   height: 2rem;
   line-height: 2.4rem;
 }
+
 .power_up .new_power {
   color: #6bf468;
+}
+.power_up .new_power_diff {
+  color: #6bf468;
+  font-size: 1.125rem;
+  margin-left: .5rem;
 }
 
 .upgrade_costs {
