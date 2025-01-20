@@ -198,8 +198,10 @@ const setNewProfile = async () => {
 }
 
 const loadTroops = async () => {
-    const data = await storage.getItem('TroopsData', lastUsedProfile, 'LGTroopsCalculator')
+    const data = await storage.getItem('TroopsData', lastUsedProfile, 'LGTroopsCalculator') || null
     console.log(data)
+
+    if (!data) return
 
     document.querySelector('#tankCores').value = data.resources.tankcore
     document.querySelector('#mechCore').value = data.resources.mechCore
