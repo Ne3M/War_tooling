@@ -14,13 +14,20 @@
 <body class="troops">
 
     <header>
-        <h1>Troops Calculator</h1>
+        <div class="top_header">
+            <h1>Troops Calculator</h1>
+
+            <fieldset>
+                <label for="profile">Select profile</label>
+                <select id="profile"></select>      
+            </fieldset>
+        </div>
 
         <div class="ressources">
-            <div><label for="tankCores"><img src="images/tank_core.png" width="66" height="68" alt=""><span>Tank Cores</span> <input name="tankCores" type="text" value="0" /></label></div>
-            <div><label for="mechCore"><img src="images/mech_core.png" width="66" height="68" alt=""><span>Mech Cores</span> <input name="mechCore" type="text" value="0" /></label></div>
-            <div><label for="airCores"><img src="images/air_core.png" width="66" height="68" alt=""><span>Air Cores</span> <input name="airCores" type="text" value="0" /></label></div>
-            <div><label for="cube"><img src="images/cube.png" alt=""><span>Cubes</span> <input name="cube" type="text" value="0" /></label></div>
+            <div><label for="tankCores"><img src="images/tank_core.png" width="66" height="68" alt=""><span>Tank Cores</span> <input name="tankCores" id="tankCores" type="text" value="0" /></label></div>
+            <div><label for="mechCore"><img src="images/mech_core.png" width="66" height="68" alt=""><span>Mech Cores</span> <input name="mechCore" id="mechCore" type="text" value="0" /></label></div>
+            <div><label for="airCores"><img src="images/air_core.png" width="66" height="68" alt=""><span>Air Cores</span> <input name="airCores" id="airCores" type="text" value="0" /></label></div>
+            <div><label for="neocube"><img src="images/cube.png" alt=""><span>Cubes</span> <input name="neocube" id="neocube" type="text" value="0" /></label></div>
         </div>
 
         <div class="warpower">
@@ -55,8 +62,9 @@
         <div class="troops_selector">
             <fieldset class="unit" data-rarity="common" data-type="tank">
                 <div class="unit_type">
-                    <img src="images/common_tank.png" width="454" height="96" alt="">
-                    <select class="merc_level_selector">
+                    <input type="checkbox" name="common_tank_1_owned" id="common_tank_1_owned">
+                    <label for="common_tank_1_owned"><img src="images/common_tank.png" width="454" height="96" alt=""></label>
+                    <select class="merc_level_selector" id="common_tank_1_merc_bonus">
                         <option value="0">0</option>
                         <option value="1">1% </option>
                         <option value="2">2% </option>
@@ -93,8 +101,9 @@
             </fieldset>
             <fieldset class="unit" data-rarity="common" data-type="tank">
                 <div class="unit_type">
-                    <img src="images/common_tank.png" width="454" height="96" alt="">
-                    <select class="merc_level_selector">
+                    <input type="checkbox" name="common_tank_2_owned" id="common_tank_2_owned">
+                    <label for="common_tank_2_owned"><img src="images/common_tank.png" width="454" height="96" alt=""></label>
+                    <select class="merc_level_selector" id="common_tank_2_merc_bonus">
                         <option value="0">0</option>
                         <option value="1">1% </option>
                         <option value="2">2% </option>
@@ -131,8 +140,9 @@
             </fieldset>
             <fieldset class="unit" data-rarity="common" data-type="mech">
                 <div class="unit_type">
-                    <img src="images/common_mech.png" width="454" height="96" alt="">
-                    <select class="merc_level_selector">
+                    <input type="checkbox" name="common_mech_1_owned" id="common_mech_1_owned">
+                    <label for="common_mech_1_owned"><img src="images/common_mech.png" width="454" height="96" alt=""></label>
+                    <select class="merc_level_selector" id="common_mech_1_merc_bonus">
                         <option value="0">0</option>
                         <option value="1">1% </option>
                         <option value="2">2% </option>
@@ -169,8 +179,9 @@
             </fieldset>
             <fieldset class="unit" data-rarity="common" data-type="mech">
                 <div class="unit_type">
-                    <img src="images/common_mech.png" width="454" height="96" alt="">
-                    <select class="merc_level_selector">
+                    <input type="checkbox" name="common_mech_2_owned" id="common_mech_2_owned">
+                    <label for="common_mech_2_owned"><img src="images/common_mech.png" width="454" height="96" alt=""></label>
+                    <select class="merc_level_selector" id="common_mech_2_merc_bonus">
                         <option value="0">0</option>
                         <option value="1">1% </option>
                         <option value="2">2% </option>
@@ -207,8 +218,9 @@
             </fieldset>
             <fieldset class="unit" data-rarity="common" data-type="air">
                 <div class="unit_type">
-                    <img src="images/common_air.png" width="454" height="96" alt="">
-                    <select class="merc_level_selector">
+                    <input type="checkbox" name="common_air_1_owned" id="common_air_1_owned">
+                    <label for="common_air_1_owned"><img src="images/common_air.png" width="454" height="96" alt=""></label>
+                    <select class="merc_level_selector" id="common_air_1_merc_bonus">
                         <option value="0">0</option>
                         <option value="1">1% </option>
                         <option value="2">2% </option>
@@ -245,8 +257,9 @@
             </fieldset>
             <fieldset class="unit" data-rarity="common" data-type="air">
                 <div class="unit_type">
-                    <img src="images/common_air.png" width="454" height="96" alt="">
-                    <select class="merc_level_selector">
+                    <input type="checkbox" name="common_air_2_owned" id="common_air_2_owned">
+                    <label for="common_air_2_owned"><img src="images/common_air.png" width="454" height="96" alt=""></label>
+                    <select class="merc_level_selector" id="common_air_2_merc_bonus">
                         <option value="0">0</option>
                         <option value="1">1% </option>
                         <option value="2">2% </option>
@@ -284,8 +297,9 @@
 
             <fieldset class="unit premium" data-rarity="rare" data-type="tank">
                 <div class="unit_type">
-                    <img src="images/rare_tank.png" width="454" height="96" alt="">
-                    <select class="merc_level_selector">
+                    <input type="checkbox" name="rare_tank_1_owned" id="rare_tank_1_owned">
+                    <label for="rare_tank_1_owned"><img src="images/rare_tank.png" width="454" height="96" alt=""></label>
+                    <select class="merc_level_selector" id="rare_tank_1_merc_bonus">
                         <option value="0">0</option>
                         <option value="1">1% </option>
                         <option value="2">2% </option>
@@ -322,8 +336,9 @@
             </fieldset>
             <fieldset class="unit premium" data-rarity="rare" data-type="tank">
                 <div class="unit_type">
-                    <img src="images/rare_tank.png" width="454" height="96" alt="">
-                    <select class="merc_level_selector">
+                    <input type="checkbox" name="rare_tank_2_owned" id="rare_tank_2_owned">
+                    <label for="rare_tank_2_owned"><img src="images/rare_tank.png" width="454" height="96" alt=""></label>
+                    <select class="merc_level_selector" id="rare_tank_2_merc_bonus">
                         <option value="0">0</option>
                         <option value="1">1% </option>
                         <option value="2">2% </option>
@@ -358,10 +373,11 @@
                     <span class="cost_value total_cube_cost">1220</span>
                 </div>
             </fieldset>
-            <fieldset class="unit" data-rarity="rare" data-type="mech">
+            <fieldset class="unit premium" data-rarity="rare" data-type="mech">
                 <div class="unit_type">
-                    <img src="images/rare_mech.png" width="454" height="96" alt="">
-                    <select class="merc_level_selector">
+                    <input type="checkbox" name="rare_mech_owned" id="rare_mech_owned">
+                    <label for="rare_mech_owned"><img src="images/rare_mech.png" width="454" height="96" alt=""></label>
+                    <select class="merc_level_selector" id="rare_mech_merc_bonus">
                         <option value="0">0</option>
                         <option value="1">1% </option>
                         <option value="2">2% </option>
@@ -396,10 +412,11 @@
                     <span class="cost_value total_cube_cost">1220</span>
                 </div>
             </fieldset>
-            <fieldset class="unit" data-rarity="rare" data-type="air">
+            <fieldset class="unit premium" data-rarity="rare" data-type="air">
                 <div class="unit_type">
-                    <img src="images/rare_air.png" width="454" height="96" alt="">
-                    <select class="merc_level_selector">
+                    <input type="checkbox" name="rare_air_owned" id="rare_air_owned">
+                    <label for="rare_air_owned"><img src="images/rare_air.png" width="454" height="96" alt=""></label>
+                    <select class="merc_level_selector" id="rare_air_merc_bonus">
                         <option value="0">0</option>
                         <option value="1">1% </option>
                         <option value="2">2% </option>
@@ -435,10 +452,11 @@
                 </div>
             </fieldset>
 
-            <fieldset class="unit" data-rarity="epic" data-type="tank">
+            <fieldset class="unit premium" data-rarity="epic" data-type="tank">
                 <div class="unit_type">
-                    <img src="images/epic_tank.png" width="454" height="96" alt="">
-                    <select class="merc_level_selector">
+                    <input type="checkbox" name="epic_tank_owned" id="epic_tank_owned">
+                    <label for="epic_tank_owned"><img src="images/epic_tank.png" width="454" height="96" alt=""></label>
+                    <select class="merc_level_selector" id="epic_tank_merc_bonus">
                         <option value="0">0</option>
                         <option value="1">1% </option>
                         <option value="2">2% </option>
@@ -475,8 +493,9 @@
             </fieldset>
             <fieldset class="unit premium" data-rarity="epic" data-type="mech">
                 <div class="unit_type">
-                    <img src="images/epic_mech.png" width="454" height="96" alt="">
-                    <select class="merc_level_selector">
+                    <input type="checkbox" name="epic_mech_1_owned" id="epic_mech_1_owned">
+                    <label for="epic_mech_1_owned"><img src="images/epic_mech.png" width="454" height="96" alt=""></label>
+                    <select class="merc_level_selector" id="epic_mech_1_merc_bonus">
                         <option value="0">0</option>
                         <option value="1">1% </option>
                         <option value="2">2% </option>
@@ -490,10 +509,10 @@
                 </div>
                 <div class="unit_level">
                     <label>LV</label>
-                    <input type="number" name="epic_mech_1_lvl" id="rare_tank_1_lvl" placeholder="Current level" value="1" value="1" />
+                    <input type="number" name="epic_mech_1_lvl" id="epic_mech_1_lvl" placeholder="Current level" value="1" value="1" />
                     <img src="images/arrow.png" width="46" height="41">
                     <label>LV</label>
-                    <input type="number" name="rare_tank_1_flvl" id="rare_tank_1_flvl" placeholder="Desired level" value="2" max="400" />
+                    <input type="number" name="epic_mech_1_flvl" id="epic_mech_1_flvl" placeholder="Desired level" value="2" max="400" />
                 </div>
                 <div class="power_up">
                     <img src="images/power.png" width="66" height="68" alt="">
@@ -513,8 +532,9 @@
             </fieldset>
             <fieldset class="unit premium" data-rarity="epic" data-type="mech">
                 <div class="unit_type">
-                    <img src="images/epic_mech.png" width="454" height="96" alt="">
-                    <select class="merc_level_selector">
+                    <input type="checkbox" name="epic_mech_2_owned" id="epic_mech_2_owned">
+                    <label for="epic_mech_2_owned"><img src="images/epic_mech.png" width="454" height="96" alt=""></label>
+                    <select class="merc_level_selector" id="epic_mech_2_merc_bonus">
                         <option value="0">0</option>
                         <option value="1">1% </option>
                         <option value="2">2% </option>
@@ -549,10 +569,11 @@
                     <span class="cost_value total_cube_cost">1220</span>
                 </div>
             </fieldset>
-            <fieldset class="unit" data-rarity="epic" data-type="air">
+            <fieldset class="unit premium" data-rarity="epic" data-type="air">
                 <div class="unit_type">
-                    <img src="images/epic_air.png" width="454" height="96" alt="">
-                    <select class="merc_level_selector">
+                    <input type="checkbox" name="epic_air_owned" id="epic_air_owned">
+                    <label for="epic_air_owned"><img src="images/epic_air.png" width="454" height="96" alt=""></label>
+                    <select class="merc_level_selector" id="epic_air_merc_bonus">
                         <option value="0">0</option>
                         <option value="1">1% </option>
                         <option value="2">2% </option>
@@ -588,10 +609,11 @@
                 </div>
             </fieldset>
 
-            <fieldset class="unit" data-rarity="lego" data-type="tank">
+            <fieldset class="unit premium" data-rarity="lego" data-type="tank">
                 <div class="unit_type">
-                    <img src="images/lego_tank.png" width="454" height="96" alt="">
-                    <select class="merc_level_selector">
+                    <input type="checkbox" name="lego_tank_owned" id="lego_tank_owned">
+                    <label for="lego_tank_owned"><img src="images/lego_tank.png" width="454" height="96" alt=""></label>
+                    <select class="merc_level_selector" id="lego_tank_merc_bonus">
                         <option value="0">0</option>
                         <option value="1">1% </option>
                         <option value="2">2% </option>
@@ -626,10 +648,11 @@
                     <span class="cost_value total_cube_cost">1220</span>
                 </div>
             </fieldset>
-            <fieldset class="unit" data-rarity="lego" data-type="mech">
+            <fieldset class="unit premium" data-rarity="lego" data-type="mech">
                 <div class="unit_type">
-                    <img src="images/lego_mech.png" width="454" height="96" alt="">
-                    <select class="merc_level_selector">
+                    <input type="checkbox" name="lego_mech_owned" id="lego_mech_owned">
+                    <label for="lego_mech_owned"><img src="images/lego_mech.png" width="454" height="96" alt=""></label>
+                    <select class="merc_level_selector" id="lego_mech_merc_bonus">
                         <option value="0">0</option>
                         <option value="1">1% </option>
                         <option value="2">2% </option>
@@ -666,8 +689,9 @@
             </fieldset>
             <fieldset class="unit premium" data-rarity="lego" data-type="air">
                 <div class="unit_type">
-                    <img src="images/lego_air.png" width="454" height="96" alt="">
-                    <select class="merc_level_selector">
+                    <input type="checkbox" name="lego_air_1_owned" id="lego_air_1_owned">
+                    <label for="lego_air_1_owned"><img src="images/lego_air.png" width="454" height="96" alt=""></label>
+                    <select class="merc_level_selector" id="lego_air_1_merc_bonus">
                         <option value="0">0</option>
                         <option value="1">1% </option>
                         <option value="2">2% </option>
@@ -704,8 +728,9 @@
             </fieldset>
             <fieldset class="unit premium" data-rarity="lego" data-type="air">
                 <div class="unit_type">
-                    <img src="images/lego_air.png" width="454" height="96" alt="">
-                    <select class="merc_level_selector">
+                    <input type="checkbox" name="lego_air_2_owned" id="lego_air_2_owned">
+                    <label for="lego_air_2_owned"><img src="images/lego_air.png" width="454" height="96" alt=""></label>
+                    <select class="merc_level_selector" id="lego_air_2_merc_bonus">
                         <option value="0">0</option>
                         <option value="1">1% </option>
                         <option value="2">2% </option>
