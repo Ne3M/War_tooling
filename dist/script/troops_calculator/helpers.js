@@ -54,12 +54,12 @@ const updateTotalWarpower = () => {
 
     for(let unit of units){
         unit.classList.remove('most_effective')
-        currentWarPower += parseInt(unit.querySelector('.current_power').innerHTML)
-        futureWarPower += parseInt(unit.querySelector('.new_power').innerHTML)
-        if(unit.dataset.type === "tank") tankCoreCost += parseInt(unit.querySelector('.total_core_cost').innerHTML)
-        if(unit.dataset.type === "mech") mechCoreCost += parseInt(unit.querySelector('.total_core_cost').innerHTML)
-        if(unit.dataset.type === "air") airCoreCost += parseInt(unit.querySelector('.total_core_cost').innerHTML)
-        cubeCost += parseInt(unit.querySelector('.total_cube_cost').innerHTML);
+        currentWarPower += parseInt(unit.querySelector('.current_power').innerHTML || 0)
+        futureWarPower += parseInt(unit.querySelector('.new_power').innerHTML || 0)
+        if(unit.dataset.type === "tank") tankCoreCost += parseInt(unit.querySelector('.total_core_cost').innerHTML || 0)
+        if(unit.dataset.type === "mech") mechCoreCost += parseInt(unit.querySelector('.total_core_cost').innerHTML || 0)
+        if(unit.dataset.type === "air") airCoreCost += parseInt(unit.querySelector('.total_core_cost').innerHTML || 0)
+        cubeCost += parseInt(unit.querySelector('.total_cube_cost').innerHTML || 0);
         
         const cubePerPower = getCubePerPower(unit)
         if(cubePerPower < 9999) {
