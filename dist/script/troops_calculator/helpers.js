@@ -95,11 +95,11 @@ const getCubePerPower = (unit) => {
     if(desiredLevel <= 0) return 9999
     if(desiredLevel >= troopsData.length - 9) return 9999
 
-    const plus10LvlCost = troopsData[desiredLevel+9].totalCubeCost - troopsData[desiredLevel-1].totalCubeCost
-    const plus10LvlPower = Math.floor(troopsData[desiredLevel+9].powerBase * rarityMultiplier[rarity]) - Math.floor(troopsData[desiredLevel-1].powerBase * rarityMultiplier[rarity])
+    const plus10LvlCost = troopsData[Math.floor(desiredLevel/10)*10].totalCubeCost - troopsData[desiredLevel-1].totalCubeCost
+    const plus10LvlPower = Math.floor(troopsData[Math.floor(desiredLevel/10)*10].powerBase * rarityMultiplier[rarity]) - Math.floor(troopsData[desiredLevel-1].powerBase * rarityMultiplier[rarity])
     const cubePerPower = plus10LvlCost/plus10LvlPower
 
-    //console.log(`${rarity} ${unit.dataset.type} lvl ${desiredLevel} : ${plus10LvlPower} power for ${plus10LvlCost} cubes = ${cubePerPower} Cube-per-power`)
+    console.log(`${rarity} ${unit.dataset.type} lvl ${desiredLevel} : ${plus10LvlPower} power for ${plus10LvlCost} cubes = ${cubePerPower} Cube-per-power`)
 
     return cubePerPower;
 }
