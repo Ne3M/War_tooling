@@ -171,7 +171,7 @@ const renderProfileSelector = async () => {
 
 const saveTroops = async () => {
     const data = getDataFromHTML();
-    console.log(data)
+    //console.log(data)
     storage.setItem('TroopsData', lastUsedProfile, data, 'LGTroopsCalculator')
 }
 
@@ -198,7 +198,7 @@ const setNewProfile = async () => {
 
 const loadTroops = async () => {
     const data = await storage.getItem('TroopsData', lastUsedProfile, 'LGTroopsCalculator') || null
-    console.log(data)
+    console.log(`LOAD ${lastUsedProfile} data :`, data)
 
     if (!data) return
 
