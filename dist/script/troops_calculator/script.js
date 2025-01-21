@@ -37,8 +37,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Reinit All
         await loadTroops()
         document.querySelectorAll('.unit').forEach( u => {
-            updateUnitCostLine(u, true)
+            updateUnitCostLine(u)
         })
+        updateTotalWarpower()
 
     })
 
