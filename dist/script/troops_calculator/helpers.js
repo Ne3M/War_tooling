@@ -99,7 +99,7 @@ const getCubePerPower = (unit) => {
     const plus10LvlPower = Math.floor(troopsData[Math.floor(desiredLevel/10)*10].powerBase * rarityMultiplier[rarity]) - Math.floor(troopsData[desiredLevel-1].powerBase * rarityMultiplier[rarity])
     const cubePerPower = plus10LvlCost/plus10LvlPower
 
-    console.log(`${rarity} ${unit.dataset.type} lvl ${desiredLevel} : ${plus10LvlPower} power for ${plus10LvlCost} cubes = ${cubePerPower} Cube-per-power`)
+    //console.log(`${rarity} ${unit.dataset.type} lvl ${desiredLevel} : ${plus10LvlPower} power for ${plus10LvlCost} cubes = ${cubePerPower} Cube-per-power`)
 
     return cubePerPower;
 }
@@ -108,9 +108,9 @@ const getDataFromHTML = () => {
     return {
         resources: {
             tankcore: parseInt(document.querySelector('#tankCores').value),
-            mechCore: parseInt(document.querySelector('#mechCore').value),
+            mechCore: parseInt(document.querySelector('#mechCores').value),
             airCore: parseInt(document.querySelector('#airCores').value),
-            neoCube: parseInt(document.querySelector('#neocube').value),
+            neoCube: parseInt(document.querySelector('#neocubes').value),
         },
         units: {
             common: {
@@ -203,9 +203,9 @@ const loadTroops = async () => {
     if (!data) return
 
     document.querySelector('#tankCores').value = data.resources.tankcore
-    document.querySelector('#mechCore').value = data.resources.mechCore
+    document.querySelector('#mechCores').value = data.resources.mechCore
     document.querySelector('#airCores').value = data.resources.airCore
-    document.querySelector('#neocube').value = data.resources.neoCube
+    document.querySelector('#neocubes').value = data.resources.neoCube
 
     document.querySelector('#common_tank_1_lvl').value = data.units.common.tank1.currentLevel
     document.querySelector('#common_tank_2_lvl').value = data.units.common.tank2.currentLevel
@@ -275,5 +275,49 @@ const loadTroops = async () => {
     document.querySelector('#lego_mech_owned').checked = data.units.lego.mech1.owned
     document.querySelector('#lego_air_1_owned').checked = data.units.lego.air1.owned
     document.querySelector('#lego_air_2_owned').checked = data.units.lego.air2.owned
+
+}
+
+const resetUpgrades = () => {
+    document.querySelectorAll('.unit').forEach( u => {
+        u.querySelector('[id$=flvl]').value = u.querySelector('[id$=lvl]').value;
+        updateUnitCostLine(u)
+    })
+    updateTotalWarpower()
+}
+
+const autoUpgrade = () => {
+    let stillHasResources = true;
+
+    let tankCores = document.querySelector('#tankCores')
+    let mechCores = document.querySelector('#mechCores')
+    let airCores = document.querySelector('#airCores')
+    let cubes = document.querySelector('#neocubes')
+
+    let tankCoreTotal = document.querySelector('.total_tankcore_cost')
+    let mechCoreTotal = document.querySelector('.total_mechcore_cost')
+    let airCoreTotal = document.querySelector('.total_aircore_cost')
+    let cubeTotal = document.querySelector('.total_cube_cost')
+    resetUpgrades();
+
+    const upgrader = setInterval(() => {
+        let u = document.querySelector('.most_effective')
+        let ulvl = document.querySelector('.most_effective [id$=flvl]')
+        let v = parseInt(ulvl.value)
+        ulvl.value = v+10
+        updateUnitCostLine(u, true)
+
+        if( parseInt(tankCoreTotal.innerHTML) >= parseInt(tankCores.value) ) stillHasResources = false
+        if( parseInt(mechCoreTotal.innerHTML) >= parseInt(mechCores.value) ) stillHasResources = false
+        if( parseInt(airCoreTotal.innerHTML) >= parseInt(airCores.value) ) stillHasResources = false
+        if( parseInt(cubeTotal.innerHTML) >= parseInt(cubes.value) ) stillHasResources = false
+
+        if( !stillHasResources ) {
+            clearInterval(upgrader)
+            ulvl.value = v;
+            updateUnitCostLine(u, true)
+        }
+    }, 50);
+
 
 }

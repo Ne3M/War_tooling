@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         await saveTroops()
     })
     
-
     // You add/select a profile
     document.querySelector('#profile').addEventListener('change', async (e) => {
         lastUsedProfile = e.target.value
@@ -42,5 +41,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         updateTotalWarpower()
 
     })
+
+    //reset 
+    document.querySelector('#reset').addEventListener('click', () => resetUpgrades())
+    document.querySelector('#auto').addEventListener('click', () => autoUpgrade())
 
 })

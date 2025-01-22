@@ -259,6 +259,7 @@ body {
   text-align: center;
   border-radius: 5px;
   color: #fff;
+  position: relative;
 }
 .warpower img {
   height: 40px;
@@ -274,6 +275,38 @@ body {
   margin-right: .5rem;
 }
 
+.warpower .buttons {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  max-width: 5rem;
+  text-align: right;
+}
+.warpower button {
+  margin-bottom: .375rem;
+  background: white;
+  border: 0;
+  padding: 0.5rem 1rem;
+  position: relative;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+.warpower button:after {
+  content: "";
+  position: absolute;
+  top: 3px; right: 3px;
+  width: 8px; height: 8px;
+  background: #292929;
+  clip-path: polygon(100% 0, 0 0, 100% 100%);
+}
+.warpower .buttons #reset {
+  background: rgb(224,226,247);;
+  background: radial-gradient(circle at 50% 120%, rgba(224,226,247,1) 0%, rgba(142,160,227,1) 100%);
+}  
+.warpower .buttons #auto {
+  background: rgb(128,253,109);
+  background: radial-gradient(circle at 50% 120%, rgba(128,253,109,1) 0%, rgba(68,188,102,1) 80%);
+} 
 
 
 .troops_selector {
