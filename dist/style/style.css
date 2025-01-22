@@ -126,6 +126,8 @@ body {
   .result { 
     margin-top: 1rem;
     width: calc(50% - 1rem);
+    max-width: 430px;
+    margin-right: 2rem;
   }
   table {
     max-width: 100%;
