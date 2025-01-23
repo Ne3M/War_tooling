@@ -1,8 +1,8 @@
 const rarityMultiplier = {
-    common: 0.4,
-    rare: 0.6,
-    epic: 0.8,
-    lego: 1,
+    common: 1,
+    rare: 1.5,
+    epic: 2,
+    lego: 2.5,
 }
 
 const init = async () => {
