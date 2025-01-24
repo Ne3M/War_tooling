@@ -200,7 +200,7 @@ const generateTable = async (data, shouldSave=false) => {
             if( m.spent_elixir > parseInt(dieselCost) ) effectiveDiesel = dieselCost
           }
         }
-        const partialDeploy = (m.summary_power / dieselMultiplier[`${effectiveDiesel}`]) < m.remaining_power && m.summary_power > 0
+        const partialDeploy = (1.03 * m.summary_power / dieselMultiplier[`${effectiveDiesel}`]) < m.remaining_power && m.summary_power > 0
 
         totalUndeployed += (m.remaining_power > m.summary_power)? m.remaining_power - m.summary_power : 0;
         totalDeployed += m.summary_power;
