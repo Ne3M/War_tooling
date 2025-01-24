@@ -1,3 +1,29 @@
+const dieselMultiplier = {
+  "0": 1,
+  "30": 1.2,
+  "100": 1.4,
+  "200": 1.7,
+  "350": 2,
+  "600": 2.3,
+  "1000": 2.6,
+  "1600": 2.9,
+  "2300": 3.3,
+  "3150": 3.7,
+  "4000": 4.1,
+  "4850": 4.5,
+  "5700": 5,
+  "6550": 5.5,
+  "7400": 6,
+  "8250": 6.5,
+  "9100": 7.1,
+  "10000": 7.7,
+  "11000": 8.3,
+  "13000": 8.9,
+  "15000": 9.6,
+  "17000": 10.3,
+  "19000": 11,
+}
+
 const init = async () => {
   warList = await storage.getItem('GlobalData', 'LGWarList', 'LGToolData') || JSON.parse(window.localStorage.getItem("LGWarList")) || []
   if(!warList.includes(warID)) {
@@ -162,29 +188,37 @@ const generateTable = async (data, shouldSave=false) => {
       .reverse()
       .forEach(m => {
 
-      data.result.analysisDate = data.result.analysisDate || new Date().getTime();
+        data.result.analysisDate = data.result.analysisDate || new Date().getTime();
 
-      const inactivityInHour = Math.floor((new Date(data.result.analysisDate)-new Date(m.last_visit)+(new Date().getTimezoneOffset()*(60*1000)))/1000/60/60)
-      const isActive = inactivityInHour < 24;
-      const isLocked = new Date(m.locked_gw_till).getTime() > new Date(data.result.analysisDate).getTime()
+        const inactivityInHour = Math.floor((new Date(data.result.analysisDate)-new Date(m.last_visit)+(new Date().getTimezoneOffset()*(60*1000)))/1000/60/60)
+        const isActive = inactivityInHour < 24;
+        const isLocked = new Date(m.locked_gw_till).getTime() > new Date(data.result.analysisDate).getTime()
+        
+        let effectiveDiesel = m.spent_elixir
+        if( !(m.spent_elixir in dieselMultiplier) && m.spent_elixir != 0) {
+          for(dieselCost in dieselMultiplier)  {
+            if( m.spent_elixir > parseInt(dieselCost) ) effectiveDiesel = dieselCost
+          }
+        }
+        const partialDeploy = (m.summary_power / dieselMultiplier[`${effectiveDiesel}`]) < m.remaining_power && m.summary_power > 0
 
-      totalUndeployed += (m.remaining_power > m.summary_power)? m.remaining_power - m.summary_power : 0;
-      totalDeployed += m.summary_power;
-      totalInactive += (isActive) ? 0 : m.remaining_power;
-      totalDieselDeployed += m.spent_elixir;
-      totalLocked += isLocked ? m.remaining_power : 0;
+        totalUndeployed += (m.remaining_power > m.summary_power)? m.remaining_power - m.summary_power : 0;
+        totalDeployed += m.summary_power;
+        totalInactive += (isActive) ? 0 : m.remaining_power;
+        totalDieselDeployed += m.spent_elixir;
+        totalLocked += isLocked ? m.remaining_power : 0;
 
-      data.result.guild.totalPowerUsed = totalDeployed;
-    
-      html += `<tr>
-         <td class='player ${isActive?'':'inactive'}'>
-          ${m.NameBit.Name}${isActive?'':' (i)'}
-          ${isLocked ? '<span title="'+m.locked_gw_till+'">🔒</span>':''}
-        </td> 
-        <td class='diesel'> ${m.spent_elixir.toLocaleString('es-ES')}</td>
-        <td class='deployed'> ${m.summary_power.toLocaleString('es-ES')}</td>
-        <td class='power'> ${m.remaining_power.toLocaleString('es-ES')}</td>
-      </tr>`
+        data.result.guild.totalPowerUsed = totalDeployed;
+      
+        html += `<tr>
+          <td class='player ${isActive?'':'inactive'}'>
+            ${m.NameBit.Name}${isActive?'':' (i)'}
+            ${isLocked ? '<span title="'+m.locked_gw_till+'">🔒</span>':''}
+          </td> 
+          <td class='diesel'> ${m.spent_elixir.toLocaleString('es-ES')}</td>
+          <td class='deployed'> ${m.summary_power.toLocaleString('es-ES')}</td>
+          <td class='power ${(partialDeploy)?'⚠️':''}'>${m.remaining_power.toLocaleString('es-ES')}</td>
+        </tr>`
     })
     html += `<tr>
     <td class='player'>TOTAL</td>
