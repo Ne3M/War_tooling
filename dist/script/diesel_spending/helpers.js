@@ -30,6 +30,12 @@ const dieselMultiplier = {
 }
 
 const init = async () => {
+
+  if( window.location.search.includes('shareData') ) {
+    displayLastReport(true)
+    return
+  }
+
   warList = await storage.getItem('GlobalData', 'LGWarList', 'LGToolData') || JSON.parse(window.localStorage.getItem("LGWarList")) || []
   if(!warList.includes(warID)) {
       warList.push(warID) 
@@ -43,7 +49,7 @@ const init = async () => {
   await renderHistorySelector()
   await renderAllianceSelector()
   renderProfileSelector()
-  displayLastReport()
+  await displayLastReport()
 }
 
 const getCurrentProfileWarlist = () => {
@@ -168,8 +174,10 @@ const renderAllianceSelector = async () => {
 
 const generateTable = async (data, shouldSave=false) => {
     const allianceColors = await storage.getItem(storage.storeName, 'Alliances_colors') || []
+    data.result.analysisDate = data.result.analysisDate || new Date().getTime();
+    const allianceColor = allianceColors.find(ally=>ally.name === data.result.guild.name)?.color || data.result.allianceColor || "none"
 
-    let html = `<strong style="background: ${allianceColors.find(ally=>ally.name === data.result.guild.name)?.color}">${data.result.guild.name}</strong>
+    let html = `<strong class="" style="background: ${allianceColor}">${data.result.guild.name}</strong>
     <table>
       <tr>
         <th class=''>Player</th>
@@ -183,7 +191,36 @@ const generateTable = async (data, shouldSave=false) => {
     let totalUndeployed = 0;
     let totalLocked = 0;
     let totalInactive = 0;
-    data.result.members
+
+    cleanData = {
+      result: {
+        analysisDate: data.result.analysisDate,
+        allianceColor: allianceColor,
+        guild:{
+          name: data.result.guild.name,
+          members_count: data.result.guild.members_count,
+          summary_power: data.result.guild.summary_power,
+          totalPowerUsed: 0
+        },
+        members: data.result.members.map(m => {
+          return {
+            locked_gw_till: m.locked_gw_till,
+            remaining_power: m.remaining_power,
+            summary_power: m.summary_power,
+            last_visit: m.last_visit,
+            spent_elixir: m.spent_elixir,
+            NameBit: {
+              Name: m.NameBit.Name
+            }
+          }
+        })
+      }
+    }
+    console.log(cleanData)
+
+    //data = cleanData;
+
+    cleanData.result.members
       .sort((a, b) => {
         if (a.summary_power !== b.summary_power) {
           return a.summary_power - b.summary_power; 
@@ -193,11 +230,9 @@ const generateTable = async (data, shouldSave=false) => {
       .reverse()
       .forEach(m => {
 
-        data.result.analysisDate = data.result.analysisDate || new Date().getTime();
-
-        const inactivityInHour = Math.floor((new Date(data.result.analysisDate)-new Date(m.last_visit)+(new Date().getTimezoneOffset()*(60*1000)))/1000/60/60)
+        const inactivityInHour = Math.floor((new Date(cleanData.result.analysisDate)-new Date(m.last_visit)+(new Date().getTimezoneOffset()*(60*1000)))/1000/60/60)
         const isActive = inactivityInHour < 24;
-        const isLocked = new Date(m.locked_gw_till).getTime() > new Date(data.result.analysisDate).getTime()
+        const isLocked = new Date(m.locked_gw_till).getTime() > new Date(cleanData.result.analysisDate).getTime()
         
         let effectiveDiesel = m.spent_elixir
         if( !(m.spent_elixir in dieselMultiplier) && m.spent_elixir != 0) {
@@ -213,7 +248,7 @@ const generateTable = async (data, shouldSave=false) => {
         totalDieselDeployed += m.spent_elixir;
         totalLocked += isLocked ? m.remaining_power : 0;
 
-        data.result.guild.totalPowerUsed = totalDeployed;
+        cleanData.result.guild.totalPowerUsed = totalDeployed;
       
         html += `<tr>
           <td class='player ${isActive?'':'inactive'}'>
@@ -229,7 +264,7 @@ const generateTable = async (data, shouldSave=false) => {
     <td class='player'>TOTAL</td>
     <td>${totalDieselDeployed.toLocaleString('es-ES')}</td>
     <td>${totalDeployed.toLocaleString('es-ES')}</td>
-    <td>${data.result.guild.summary_power.toLocaleString('es-ES')}</td>
+    <td>${cleanData.result.guild.summary_power.toLocaleString('es-ES')}</td>
     </tr>
     <tr>
       <td class='player'>UNDEPLOYED TROOPS</td>
@@ -254,12 +289,24 @@ const generateTable = async (data, shouldSave=false) => {
     </tr>`
     html += "</table>"
     html += "</table>"
+
+
+    const comp = await compressString(JSON.stringify(cleanData))
+    const decomp = JSON.parse(await decompressBase64(comp))
+    console.log( {comp, decomp} )
+
+    html += `<a class="share_report" href="?shareData=${encodeURI(comp)}" title="Share" target="_blank">
+      <svg fill="#000000" height="20px" width="20px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 458.624 458.624" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <g> <path d="M339.588,314.529c-14.215,0-27.456,4.133-38.621,11.239l-112.682-78.67c1.809-6.315,2.798-12.976,2.798-19.871 c0-6.896-0.989-13.557-2.798-19.871l109.64-76.547c11.764,8.356,26.133,13.286,41.662,13.286c39.79,0,72.047-32.257,72.047-72.047 C411.634,32.258,379.378,0,339.588,0c-39.79,0-72.047,32.257-72.047,72.047c0,5.255,0.578,10.373,1.646,15.308l-112.424,78.491 c-10.974-6.759-23.892-10.666-37.727-10.666c-39.79,0-72.047,32.257-72.047,72.047s32.256,72.047,72.047,72.047 c13.834,0,26.753-3.907,37.727-10.666l113.292,79.097c-1.629,6.017-2.514,12.34-2.514,18.872c0,39.79,32.257,72.047,72.047,72.047 c39.79,0,72.047-32.257,72.047-72.047C411.635,346.787,379.378,314.529,339.588,314.529z"></path> </g> </g> </g></svg>
+    </a>`
+
     
     document.querySelector('.result').innerHTML = html;
-    
+
     if(!shouldSave) return;
-    saveHistory(data)
-    if(currentAllianceFilter === data.result.guild.name) {
+    saveHistory(cleanData)
+
+
+    if(currentAllianceFilter === cleanData.result.guild.name) {
       renderHistorySelector(currentAllianceFilter)
     } else {
       document.querySelector('#alliance :first-child').selected = true
@@ -267,7 +314,17 @@ const generateTable = async (data, shouldSave=false) => {
     }
 }
 
-const displayLastReport = () => {
+const displayLastReport = async (fromQueryUrl = false) => {
+    
+    // If URL has shareData, decompress data and send it to generateTable
+    if(fromQueryUrl) {
+      const dataFromURL = window.location.search.split('shareData=')[1];
+      const restoredData = JSON.parse(await decompressBase64( dataFromURL ))
+      document.body.classList.add('shared')
+      generateTable(restoredData)
+      return
+    }
+
     storage.getItem(storage.storeName, document.querySelector('#history option:last-child').value).then(r => {
         if(r) {generateTable(r)} else {  document.querySelector('.result').innerHTML=""}
     })
@@ -277,7 +334,11 @@ const displayLastReport = () => {
 const colors = ["#66fefe", "#44b2e0", "#403dfd", "#ed40f1", "#d31616", "#fcbc82", "#ecfe01", "#986633", "#9833fe", "#2b802b"]
 const setAllianceColors = (data) => {
   const allianceColors = []
-  data.result.guilds.forEach((a,i) => {
+  data.result.guilds
+  .sort((a, b) => {
+      return a.in_room_place - b.in_room_place; 
+  })
+  .forEach((a,i) => {
     allianceColors.push({
       name: a.guild_name, 
       color: colors[i]
@@ -289,4 +350,47 @@ const setAllianceColors = (data) => {
 const detectDataType = (data) => {
   if (data.result.guilds) setAllianceColors(data)
   if (data.result.members) generateTable(data, true)
+}
+
+async function compressString(input) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(input);
+  
+  const cs = new CompressionStream('gzip');
+  const writer = cs.writable.getWriter();
+  writer.write(data);
+  writer.close();
+  
+  const compressedStream = cs.readable;
+  const reader = compressedStream.getReader();
+  const chunks = [];
+  
+  let result;
+  while (!(result = await reader.read()).done) {
+      chunks.push(result.value);
+  }
+  
+  const compressedArray = new Uint8Array(chunks.reduce((acc, val) => [...acc, ...val], []));
+  return btoa(String.fromCharCode(...compressedArray));
+}
+
+async function decompressBase64(base64) {
+  const binaryString = atob(base64);
+  const compressedArray = new Uint8Array(binaryString.length);
+  for (let i = 0; i < binaryString.length; i++) {
+      compressedArray[i] = binaryString.charCodeAt(i);
+  }
+  
+  const ds = new DecompressionStream('gzip');
+  const stream = new Blob([compressedArray]).stream().pipeThrough(ds);
+  const reader = stream.getReader();
+  const chunks = [];
+  
+  let result;
+  while (!(result = await reader.read()).done) {
+      chunks.push(result.value);
+  }
+  
+  const decoder = new TextDecoder();
+  return decoder.decode(new Uint8Array(chunks.reduce((acc, val) => [...acc, ...val], [])));
 }

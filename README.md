@@ -10,6 +10,10 @@
 [x] Add entry point  
 [x] Publish on netlify  
 [x] Store warlist and profileList in indexedDB
+[x] Allow to review old wars
+[ ] Detect partial deploy
 
 [ ] Add estimation of remaining troops  
-[ ] Allow to review old wars
+[ ] Allow to share a report
+[ ] Check if deploy was at this Clash or previous (Need to parse deploy history)
+

@@ -128,7 +128,25 @@ body {
     width: calc(50% - 1rem);
     max-width: 430px;
     margin-right: 2rem;
+    position: relative;
   }
+
+  .share_report {
+    position: absolute;
+    background: #fff;
+    top: -5px;
+    right: 0;
+    cursor: pointer;
+    box-shadow: 0 0 5px #0006;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    padding: 3px;
+  }
+  .share_report svg {
+    translate: -1px 0 0;
+  }
+
   table {
     max-width: 100%;
     border-collapse: collapse;
@@ -231,6 +249,11 @@ body {
   font-weight: bold;
   margin-bottom: 0.5rem;
   margin-left: -1rem;
+}
+
+
+.shared :is(  header, .info, .share_report  ){
+display: none;
 }
 
 
