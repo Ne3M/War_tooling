@@ -317,7 +317,7 @@ const autoUpgrade = () => {
             ulvl.value = v;
             updateUnitCostLine(u, true)
         }
-    }, 50);
+    }, 10);
 
 
 }
