@@ -7,14 +7,19 @@ for (let i = 0; i < 1300; i++) {
   let lvl = i+1;
   let cubeCost = (lvl % 10 === 0) ? cubeCostsList[(lvl/10)-1] : 0;
 
+  let coreCost = (lvl < 1000) ? 
+    Math.round(8 + 2 * lvl**1.5) 
+    : 
+    Math.round(1.275 * ((lvl)**2) - 1211601)
+
   troopsData.push({
     "level": lvl,
     "powerBase": Math.floor(98 + Math.sqrt(lvl) * (lvl*2)),
-    "coreCost": Math.floor(8 + Math.sqrt(lvl) * (lvl*2)),
+    "coreCost": coreCost,
     "totalCoreCost": totalCores,
     "totalCubeCost": totalCubes
   })
-  totalCores += Math.floor(8 + Math.sqrt(lvl) * (lvl*2))
+  totalCores += coreCost
   totalCubes += cubeCost
 
 }
