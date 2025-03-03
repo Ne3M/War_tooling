@@ -408,7 +408,8 @@ display: none;
 }
 .unit input {
   appearance: textfield;
-  width: 50px;
+  text-align: center;
+  width: 75px;
   height: 2rem;
   font-weight: bold;
   font-size: 1.5rem;
