@@ -295,11 +295,10 @@ const generateTable = async (data, shouldSave=false) => {
     const decomp = JSON.parse(await decompressBase64(comp))
     console.log( {comp, decomp} )
 
-    html += `<a class="share_report" href="?shareData=${encodeURI(comp)}" title="Share" target="_blank">
+    html += `<a class="share_report" href="#" title="Share" target="_blank" data-report="${encodeURI(comp)}">
       <svg fill="#000000" height="20px" width="20px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 458.624 458.624" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <g> <path d="M339.588,314.529c-14.215,0-27.456,4.133-38.621,11.239l-112.682-78.67c1.809-6.315,2.798-12.976,2.798-19.871 c0-6.896-0.989-13.557-2.798-19.871l109.64-76.547c11.764,8.356,26.133,13.286,41.662,13.286c39.79,0,72.047-32.257,72.047-72.047 C411.634,32.258,379.378,0,339.588,0c-39.79,0-72.047,32.257-72.047,72.047c0,5.255,0.578,10.373,1.646,15.308l-112.424,78.491 c-10.974-6.759-23.892-10.666-37.727-10.666c-39.79,0-72.047,32.257-72.047,72.047s32.256,72.047,72.047,72.047 c13.834,0,26.753-3.907,37.727-10.666l113.292,79.097c-1.629,6.017-2.514,12.34-2.514,18.872c0,39.79,32.257,72.047,72.047,72.047 c39.79,0,72.047-32.257,72.047-72.047C411.635,346.787,379.378,314.529,339.588,314.529z"></path> </g> </g> </g></svg>
     </a>`
 
-    
     document.querySelector('.result').innerHTML = html;
 
     if(!shouldSave) return;
@@ -393,4 +392,30 @@ async function decompressBase64(base64) {
   
   const decoder = new TextDecoder();
   return decoder.decode(new Uint8Array(chunks.reduce((acc, val) => [...acc, ...val], [])));
+}
+
+async function getShortLink(link) {
+  const bitlyToken = process.env['tinyURLToken']
+  const url = "https://api.tinyurl.com/create";
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${bitlyToken}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        "url": link
+    })
+    });
+    if (!response.ok) {
+      throw new Error(`Response status: ${response.status}`);
+    }
+
+    const json = await response.json();
+    return json.data.tiny_url;
+  } catch (error) {
+    console.error(error.message);
+    return link
+  }
 }

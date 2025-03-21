@@ -1,0 +1,8 @@
+# the following example uses the default values
+[[plugins]]
+  package = "netlify-plugin-bundle-env"
+  [plugins.inputs]
+    debug = true
+    files = ['dist/script/diesel_spending/helpers.js']
+    extensions = ["js", "ts"]
+    include = ['tinyURLToken']

@@ -14,6 +14,7 @@
 [ ] Detect partial deploy
 
 [ ] Add estimation of remaining troops  
-[ ] Allow to share a report
+[x] Allow to share a report
+[x] Add url shortener
 [ ] Check if deploy was at this Clash or previous (Need to parse deploy history)
 

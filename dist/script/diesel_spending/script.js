@@ -84,12 +84,35 @@ document.addEventListener('DOMContentLoaded', async () => {
     })
 
     // Open/Close feature listing
-    document.querySelector('#open_modal').addEventListener('click', async (e) => {
+    document.querySelector('#open_modal').addEventListener('click', (e) => {
         document.querySelector('#instruction').showModal()
     })
-    document.querySelector('#close_modal').addEventListener('click', async (e) => {
-        document.querySelector('#instruction').close()
+    document.querySelectorAll('.close_modal').forEach(i => {
+        i.addEventListener('click', (e) => {
+            document.querySelector('#instruction').close()
+            document.querySelector('#shareLink').close()
+        })
     })
-  
+
+    document.addEventListener('click', async (e) => {
+        e.preventDefault()
+        const target = e.target
+        if(!target.classList.contains('share_report')) return
+        
+        const shareLink = await getShortLink(`https://fumicon-war-tools.netlify.app/?shareData=${target.dataset.report}`)
+
+        const shareAnchor = document.querySelector('.share-link')
+        shareAnchor.dataset.link = shareLink
+        shareAnchor.innerHTML = shareLink
+
+        document.querySelector('#shareLink').showModal()
+
+        console.log(shareLink)
+    })
+
+    document.querySelector('.share-link-container .copylink').addEventListener('click', async (e) => {
+        navigator.clipboard.writeText(document.querySelector('.share-link').dataset.link);
+        document.querySelector('.copylink').innerHTML = 'copied!'
+    })
     
 })
