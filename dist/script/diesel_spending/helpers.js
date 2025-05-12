@@ -54,7 +54,16 @@ const init = async () => {
 
 const getCurrentProfileWarlist = () => {
   const warListSelector = document.querySelector('#previous_war_list')
-  const filteredWarList = warList.filter(w => w.startsWith(lastUsedProfile)).sort()
+  const filteredWarList = warList.filter(w => w.startsWith(lastUsedProfile)).sort((a,b) => {
+
+      let warDateDataA = a.split('_')[1].split('-')
+      let warDateA = new Date('20'+warDateDataA[2],warDateDataA[1]-1,warDateDataA[0]).getTime()
+      let warDateDataB = b.split('_')[1].split('-')
+      let warDateB = new Date('20'+warDateDataB[2],warDateDataB[1]-1,warDateDataB[0]).getTime()
+
+      return warDateA > warDateB ? 1 : -1
+
+  })
   
   warListSelector.querySelectorAll('option').forEach(o => warListSelector.removeChild(o))
 
@@ -145,7 +154,7 @@ const renderHistorySelector = async (alliance = "") => {
       dateStyle: 'short',
       timeStyle: 'short',
     }).format(new Date(h.result.analysisDate))
-      const text = document.createTextNode(`${date} - ${h.result.guild.name} - ${h.result.guild.totalPowerUsed} troops used`)
+      const text = document.createTextNode(`${date} - ${h.result.guild.name} - ${h.result.guild.totalPowerUsed.toLocaleString('es-ES')} troops used`)
       option.style.background = allianceColors.find(ally=>ally.name === h.result.guild.name)?.color
       option.appendChild(text);
       option.value=`${h.result.guild.name}_${h.result.guild.totalPowerUsed}_${h.result.guild.summary_power}`;
