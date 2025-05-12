@@ -11,6 +11,7 @@ const init = async () => {
         updateUnitCostLine(u)
     })
     updateTotalWarpower()
+    getMostEffectiveUnit()
     renderProfileSelector()
 }
 
@@ -49,59 +50,83 @@ const updateTotalWarpower = () => {
     let mechCoreCost = 0;
     let airCoreCost = 0;
     let cubeCost = 0;
-    let mostCubeEffectiveUnits = [];
-    let mostCubeEffectiveCost = 9999;
+    
 
     for(let unit of units){
-        unit.classList.remove('most_effective')
+        unit.classList.remove('most_effective');
         currentWarPower += parseInt(unit.querySelector('.current_power').innerHTML || 0)
         futureWarPower += parseInt(unit.querySelector('.new_power').innerHTML || 0)
         if(unit.dataset.type === "tank") tankCoreCost += parseInt(unit.querySelector('.total_core_cost').innerHTML || 0)
         if(unit.dataset.type === "mech") mechCoreCost += parseInt(unit.querySelector('.total_core_cost').innerHTML || 0)
         if(unit.dataset.type === "air") airCoreCost += parseInt(unit.querySelector('.total_core_cost').innerHTML || 0)
         cubeCost += parseInt(unit.querySelector('.total_cube_cost').innerHTML || 0);
-        
-        const cubePerPower = getCubePerPower(unit)
-        if(cubePerPower < 9999) {
-            if( cubePerPower === mostCubeEffectiveCost ) {
-                mostCubeEffectiveUnits.push(unit)
-                mostCubeEffectiveCost = cubePerPower;
-            } else if ( cubePerPower < mostCubeEffectiveCost ) {
-                mostCubeEffectiveUnits = [unit];
-                mostCubeEffectiveCost = cubePerPower;
+
+        document.querySelector('.warpower .current_power').innerHTML = currentWarPower;
+        document.querySelector('.warpower .new_power').innerHTML = futureWarPower;
+        document.querySelector('.warpower .new_power_diff').innerHTML = (futureWarPower - currentWarPower > 0) ? `(+${futureWarPower - currentWarPower})` : '';;
+        document.querySelector('.warpower .upgrade_costs .total_tankcore_cost').innerHTML = tankCoreCost;
+        document.querySelector('.warpower .upgrade_costs .total_mechcore_cost').innerHTML = mechCoreCost;
+        document.querySelector('.warpower .upgrade_costs .total_aircore_cost').innerHTML = airCoreCost;
+        document.querySelector('.warpower .upgrade_costs .total_cube_cost').innerHTML = cubeCost;
+    }
+
+    getMostEffectiveUnit()
+    
+}
+
+const getMostEffectiveUnit = () => {
+
+    const units = document.querySelectorAll('.troops_selector .unit:not(.premium), .troops_selector .unit:has(input:checked)');
+    let mostEffectiveUnits = [];
+    let mostEffectiveCost = 9999;
+
+    for(let unit of units){
+        unit.classList.remove('most_effective');
+        if(unit.classList.contains('spent')) continue 
+
+        const resourcesPerPower = getResourcesPerPower(unit)
+        if(resourcesPerPower < 9999) {
+            if( resourcesPerPower === mostEffectiveCost ) {
+                mostEffectiveUnits.push(unit)
+                mostEffectiveCost = resourcesPerPower;
+            } else if ( resourcesPerPower < mostEffectiveCost ) {
+                mostEffectiveUnits = [unit];
+                mostEffectiveCost = resourcesPerPower;
             }
         }
     }
-    // console.log({mostCubeEffectiveUnits, mostCubeEffectiveCost})
-    for( let mostCubeEffectiveUnit of mostCubeEffectiveUnits) {
-        mostCubeEffectiveUnit.classList.add('most_effective')
+    // console.log({mostEffectiveUnits, mostEffectiveCost})
+    for( let mostEffectiveUnit of mostEffectiveUnits) {
+        mostEffectiveUnit.classList.add('most_effective')
     }
-    
-    document.querySelector('.warpower .current_power').innerHTML = currentWarPower;
-    document.querySelector('.warpower .new_power').innerHTML = futureWarPower;
-    document.querySelector('.warpower .new_power_diff').innerHTML = (futureWarPower - currentWarPower > 0) ? `(+${futureWarPower - currentWarPower})` : '';;
-    document.querySelector('.warpower .upgrade_costs .total_tankcore_cost').innerHTML = tankCoreCost;
-    document.querySelector('.warpower .upgrade_costs .total_mechcore_cost').innerHTML = mechCoreCost;
-    document.querySelector('.warpower .upgrade_costs .total_aircore_cost').innerHTML = airCoreCost;
-    document.querySelector('.warpower .upgrade_costs .total_cube_cost').innerHTML = cubeCost;
+
 }
 
-const getCubePerPower = (unit) => {
+const getResourcesPerPower = (unit) => {
+
+    const useCorePriority = document.querySelector('#resourcePriority').checked
     
     const rarity = unit.dataset.rarity
     // const currentLevel = parseInt(unit.querySelector('.unit_level input').value)
     const desiredLevel = parseInt(unit.querySelector('.unit_level input:last-of-type').value)
+    const currentTen = Math.floor(desiredLevel/10)*10
+    const nextTen = (Math.floor(desiredLevel/10)+1)*10
 
     if(desiredLevel <= 0) return 9999
     if(desiredLevel >= troopsData.length - 9) return 9999
 
-    const plus10LvlCost = troopsData[Math.floor(desiredLevel/10)*10].totalCubeCost - troopsData[desiredLevel-1].totalCubeCost
-    const plus10LvlPower = Math.floor(troopsData[Math.floor(desiredLevel/10)*10].powerBase * rarityMultiplier[rarity]) - Math.floor(troopsData[desiredLevel-1].powerBase * rarityMultiplier[rarity])
-    const cubePerPower = plus10LvlCost/plus10LvlPower
+    const plus10LvlPower = Math.floor(troopsData[nextTen].powerBase * rarityMultiplier[rarity]) - Math.floor(troopsData[currentTen].powerBase * rarityMultiplier[rarity])
+    let plus10LvlCost = troopsData[nextTen].totalCubeCost - troopsData[currentTen].totalCubeCost
+    
+    if(useCorePriority) {
+        plus10LvlCost = troopsData[nextTen].totalCoreCost - troopsData[currentTen].totalCoreCost
+    }
 
-    //console.log(`${rarity} ${unit.dataset.type} lvl ${desiredLevel} : ${plus10LvlPower} power for ${plus10LvlCost} cubes = ${cubePerPower} Cube-per-power`)
+    const resourcesPerPower = plus10LvlCost/plus10LvlPower
 
-    return cubePerPower;
+    console.log(`${rarity.toUpperCase()} ${unit.dataset.type} lvl ${desiredLevel} \n${plus10LvlPower} power for ${plus10LvlCost} \nCost = ${Math.round(resourcesPerPower)} ${useCorePriority? 'Core':'Cube'} per power`)
+
+    return resourcesPerPower;
 }
 
 const getDataFromHTML = () => {
@@ -302,22 +327,59 @@ const autoUpgrade = () => {
 
     const upgrader = setInterval(() => {
         let u = document.querySelector('.most_effective')
+
+        if(!u) {
+            clearInterval(upgrader)
+            return
+        }
+
+        let uType = u.dataset.type
         let ulvl = document.querySelector('.most_effective [id$=flvl]')
         let v = parseInt(ulvl.value)
-        ulvl.value = v+10
+        ulvl.value = Math.floor((v+10)/10)*10
         updateUnitCostLine(u, true)
 
-        if( parseInt(tankCoreTotal.innerHTML) >= parseInt(tankCores.value) ) stillHasResources = false
-        if( parseInt(mechCoreTotal.innerHTML) >= parseInt(mechCores.value) ) stillHasResources = false
-        if( parseInt(airCoreTotal.innerHTML) >= parseInt(airCores.value) ) stillHasResources = false
-        if( parseInt(cubeTotal.innerHTML) >= parseInt(cubes.value) ) stillHasResources = false
+        if( uType === 'tank' && parseInt(tankCoreTotal.innerHTML) >= parseInt(tankCores.value) ) {
+            ulvl.value = v
+            for( tank of document.querySelectorAll('[data-type="tank"')) {
+                tank.classList.add('spent')
+            }
+        }
+        if( uType === 'mech' && parseInt(mechCoreTotal.innerHTML) >= parseInt(mechCores.value) ) {
+            ulvl.value = v
+            for( mech of document.querySelectorAll('[data-type="mech"')) {
+                mech.classList.add('spent')
+            }
+        }
+        if( uType === 'air' && parseInt(airCoreTotal.innerHTML) >= parseInt(airCores.value) ) {
+            ulvl.value = v
+            for( air of document.querySelectorAll('[data-type="air"')) {
+                air.classList.add('spent')
+            }
+        }
+
+        updateUnitCostLine(u, true)
+
+        if(
+            (
+                ( parseInt(tankCoreTotal.innerHTML) >= parseInt(tankCores.value) ) 
+                && 
+                ( parseInt(mechCoreTotal.innerHTML) >= parseInt(mechCores.value) )  
+                &&
+                ( parseInt(airCoreTotal.innerHTML) >= parseInt(airCores.value) )
+            )
+            ||
+            ( parseInt(cubeTotal.innerHTML) >= parseInt(cubes.value) ) 
+        ) {
+            stillHasResources = false
+        }
 
         if( !stillHasResources ) {
             clearInterval(upgrader)
             ulvl.value = v;
             updateUnitCostLine(u, true)
         }
-    }, 10);
+    }, 5);
 
 
 }

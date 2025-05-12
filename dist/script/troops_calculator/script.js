@@ -13,7 +13,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.querySelector('.ressources').addEventListener('input', async (e) => {
         await saveTroops()
     })
-    
+
+    // You change priority
+    document.querySelector('#resourcePriority').addEventListener('change', async (e) => {
+        getMostEffectiveUnit()
+    })
+
     // You add/select a profile
     document.querySelector('#profile').addEventListener('change', async (e) => {
         lastUsedProfile = e.target.value
