@@ -37,14 +37,18 @@ const storage = {
         });
     },
     getItem: async(storeName, key, dbName = storage.dbName) => {
-        const db = await storage.openDB(storeName, dbName);
-        const transaction = db.transaction(storeName, 'readonly');
-        const store = transaction.objectStore(storeName);
-        return new Promise((resolve, reject) => {
-            const request = store.get(key);
-            request.onsuccess = () => resolve(request.result);
-            request.onerror = () => reject(request.error);
-        });
+        try {
+            const db = await storage.openDB(storeName, dbName);
+            const transaction = db.transaction(storeName, 'readonly');
+            const store = transaction.objectStore(storeName);
+            return new Promise((resolve, reject) => {
+                const request = store.get(key);
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => reject(request.error);
+            });
+        } catch (error) {
+            return null
+        }
     },
     deleteItem: async (storeName, key, dbName = storage.dbName) => {
         const db = await storage.openDB(storeName, dbName);
