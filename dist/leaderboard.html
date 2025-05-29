@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard Matchmaking report</title>
+
+    
+
+    <style>body {
+  font-family: sans-serif;
+  font-size: 0.825rem;
+  padding: 1rem;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+textarea {
+  width: 100%;
+  height: 100px;
+  box-sizing: border-box;
+  margin-bottom: 1rem;
+}
+
+table {
+   border-collapse: collapse;
+  border: 2px solid #666;
+  position: relative;
+}
+thead {
+  font-weight: bold;
+}
+td, th {
+  border: 1px #999 solid;
+  padding: 0.5rem;
+}
+th {
+  background: #999;
+  border-color: #fff;
+  position: sticky;
+  top: 0;
+}
+th:first-child {
+  text-align: left;
+}
+tr:nth-child(10n+1) td {
+  border-bottom: 4px black solid;
+}
+.outOfLeaderBoard .alliance {
+  border: 2px red solid;
+}
+.fumicon {
+  background:lime
+}
+.bold {
+  font-weight:bold;
+color: red
+}
+.player {
+  background: #eee;
+  font-weight: bold;
+}
+.inactive {
+  opacity:0.5;
+  font-style:italic;
+}
+.diesel, .deployed, .power {
+  text-align:right
+}
+</style>
+</head>
+<body>
+    <label for="data">Paste here the get_ratings request response</label>
+    <textarea id="data" placeholder="Paste here the get_ratings request response"></textarea>
+    <div class="result"></div>
+    <button id="getdata">
+    Get DATA
+    </button>
+
+
+    <script>
+        let currentData = { result:{} };
+
+        document.querySelector('#getdata').addEventListener("click", async (e) => {
+        navigator.clipboard.writeText(JSON.stringify(currentData));
+        })
+
+        document.addEventListener("paste", async (e) => {
+        setTimeout(() => {
+            data = document.querySelector("#data").value
+            process(JSON.parse(data), true)
+        }, 0)
+        })
+
+        const process = (data) => {
+
+            //console.log({currentData})
+            if( !currentData.result.guilds ) {
+                console.log('First set of data')
+                currentData = JSON.parse(JSON.stringify(data))
+            } else if ( data.result.guilds ) {
+                console.log('Merge ranking', currentData.result.guilds.length, data.result.guilds.length)
+                currentData.result.guilds = [...currentData.result.guilds, ...data.result.guilds]
+                console.log('Merge ranking', currentData.result.guilds.length, data.result.guilds.length)
+
+            }
+            if( data.result.members ) {
+                console.log('Add single guild')
+                currentData.result.guilds.push(data.result.guild)
+            }
+            // Dedupe
+            console.log('Number of ally before : ', currentData.result.guilds.length)
+
+        currentData.result.guilds = [...currentData.result.guilds.reverse().filter((g,i) => i === currentData.result.guilds.indexOf(currentData.result.guilds.find(z => z.name === g.name))) ]
+
+            console.log('Number of ally after : ', currentData.result.guilds.length)
+
+
+        let html = `<table>
+            <tr>
+                <th class=''>Map</th>
+                <th class=''>Alliance</th>
+            <th class='member'>Members</th>
+            <th class='power'> Power</th>
+            <th class='maxpower'> Max Power</th>
+            <th class='minpower'> Min Power</th>
+            </tr>
+        `
+        currentData.result.guilds
+            .sort((a, b) => {
+                        let aCurrentPower = Math.max(a.summary_power, a.max_summary_power * 0.85)
+                        let bCurrentPower = Math.max(b.summary_power, b.max_summary_power * 0.85)
+
+                return aCurrentPower - bCurrentPower; 
+            })
+            .reverse()
+            .forEach((g, i) => {
+            html += `<tr class='${g.name.includes("FuMiCon")?"fumicon":""} ${g.place>100?"outOfLeaderBoard":""}'>
+                <td>${ Math.floor( i / 10 ) +1 }</td>
+            <td class='alliance'>${g.name}</td> 
+            <td class='member'> ${(g.members_count || g.current_members || g.guild_current_members).toLocaleString('en-US')}</td>
+            <td class='power ${g.summary_power > g.max_summary_power * 0.85 ? "bold": ""}'> ${g.summary_power.toLocaleString('en-US')}</td>
+            <td class='maxpower'> ${g.max_summary_power.toLocaleString('en-US')}</td>
+            <td class='minpower ${g.summary_power < g.max_summary_power * 0.85 ? "bold": ""}'>${ Math.round(g.max_summary_power * 0.85).toLocaleString('en-US')}</td>
+            
+            </tr>`
+        })
+        html += "</table>"
+
+        document.querySelector('.result').innerHTML = html
+        }
+        //process(data)
+
+    </script>
+</body>
+</html>
