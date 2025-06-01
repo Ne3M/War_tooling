@@ -7,7 +7,8 @@
 
     
 
-    <style>body {
+    <style>
+    body {
   font-family: sans-serif;
   font-size: 0.825rem;
   padding: 1rem;
@@ -49,8 +50,13 @@ th:first-child {
 tr:nth-child(10n+1) td {
   border-bottom: 4px black solid;
 }
+.outOfLeaderBoard {
+  /*border: 2px red solid;*/
+  background: #fec
+}
 .outOfLeaderBoard .alliance {
-  border: 2px red solid;
+  color: orangered;
+  /*font-weight:bold;*/
 }
 .fumicon {
   background:lime
@@ -70,6 +76,7 @@ color: red
 .diesel, .deployed, .power {
   text-align:right
 }
+
 </style>
 </head>
 <body>
@@ -103,6 +110,7 @@ color: red
                 currentData = JSON.parse(JSON.stringify(data))
             } else if ( data.result.guilds ) {
                 console.log('Merge ranking', currentData.result.guilds.length, data.result.guilds.length)
+                currentData.result.guilds.forEach(g => { g.place = "100+"})
                 currentData.result.guilds = [...currentData.result.guilds, ...data.result.guilds]
                 console.log('Merge ranking', currentData.result.guilds.length, data.result.guilds.length)
 
@@ -127,6 +135,7 @@ color: red
             <th class='power'> Power</th>
             <th class='maxpower'> Max Power</th>
             <th class='minpower'> Min Power</th>
+            <th class='rank'> Rank</th>
             </tr>
         `
         currentData.result.guilds
@@ -138,14 +147,14 @@ color: red
             })
             .reverse()
             .forEach((g, i) => {
-            html += `<tr class='${g.name.includes("FuMiCon")?"fumicon":""} ${g.place>100?"outOfLeaderBoard":""}'>
+            html += `<tr class='${g.name.includes("FuMiCon")?"fumicon":""} ${(g.place==="100+" || g.place>100)?"outOfLeaderBoard":""}'>
                 <td>${ Math.floor( i / 10 ) +1 }</td>
             <td class='alliance'>${g.name}</td> 
             <td class='member'> ${(g.members_count || g.current_members || g.guild_current_members).toLocaleString('en-US')}</td>
             <td class='power ${g.summary_power > g.max_summary_power * 0.85 ? "bold": ""}'> ${g.summary_power.toLocaleString('en-US')}</td>
             <td class='maxpower'> ${g.max_summary_power.toLocaleString('en-US')}</td>
             <td class='minpower ${g.summary_power < g.max_summary_power * 0.85 ? "bold": ""}'>${ Math.round(g.max_summary_power * 0.85).toLocaleString('en-US')}</td>
-            
+            <td class='rank'>${g.place}</td> 
             </tr>`
         })
         html += "</table>"
