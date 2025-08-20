@@ -1,8 +1,14 @@
 const rarityMultiplier = {
-    common: 1,
-    rare: 1.5,
-    epic: 2,
-    lego: 2.5,
+    common: 2,
+    rare: 3,
+    epic: 4,
+    lego: 5,
+}
+const rarityModifier = {
+    common: 0,
+    rare: -100,
+    epic: -100,
+    lego: -100,
 }
 
 const init = async () => {
@@ -13,6 +19,14 @@ const init = async () => {
     updateTotalWarpower()
     getMostEffectiveUnit()
     renderProfileSelector()
+}
+
+const getPower = (lvl, rarity) => {
+    
+    const modifier = lvl > 1000 ? rarityModifier[rarity] : 0;
+    console.log({lvl:lvl, modifier, rarity, result: (troopsData[lvl-1].powerBase * rarityMultiplier[rarity]) + modifier})
+
+    return (troopsData[lvl-1].powerBase * rarityMultiplier[rarity]) + modifier
 }
 
 const updateUnitCostLine = (currentUnit, recalculate = false) => {
@@ -30,8 +44,8 @@ const updateUnitCostLine = (currentUnit, recalculate = false) => {
 
     const coreCost = (desiredLevel == 0)? 0 : troopsData[desiredLevel-1].totalCoreCost - troopsData[currentLevel-1].totalCoreCost
     const cubeCost = (desiredLevel == 0)? 0 : troopsData[desiredLevel-1].totalCubeCost - troopsData[currentLevel-1].totalCubeCost
-    const currentPower = (currentLevel == 0)? 0 : Math.floor(troopsData[currentLevel-1].powerBase * rarityMultiplier[rarity] * mercBonus)
-    const nextPower = (desiredLevel == 0)? 0 : Math.floor(troopsData[desiredLevel-1].powerBase * rarityMultiplier[rarity] * mercBonus)
+    const currentPower = (currentLevel == 0)? 0 : Math.floor(getPower(currentLevel, rarity) * mercBonus)
+    const nextPower = (desiredLevel == 0)? 0 : Math.floor(getPower(desiredLevel, rarity) * mercBonus)
     
     coreCostResult.innerHTML = (coreCost > 0) ? coreCost : "0";
     cubeCostResult.innerHTML = (cubeCost > 0) ? cubeCost : "0";
@@ -78,14 +92,14 @@ const getMostEffectiveUnit = () => {
 
     const units = document.querySelectorAll('.troops_selector .unit:not(.premium), .troops_selector .unit:has(input:checked)');
     let mostEffectiveUnits = [];
-    let mostEffectiveCost = 9999;
+    let mostEffectiveCost = 999999;
 
     for(let unit of units){
         unit.classList.remove('most_effective');
         if(unit.classList.contains('spent')) continue 
 
         const resourcesPerPower = getResourcesPerPower(unit)
-        if(resourcesPerPower < 9999) {
+        if(resourcesPerPower < 999999) {
             if( resourcesPerPower === mostEffectiveCost ) {
                 mostEffectiveUnits.push(unit)
                 mostEffectiveCost = resourcesPerPower;
@@ -115,7 +129,7 @@ const getResourcesPerPower = (unit) => {
     if(desiredLevel <= 0) return 9999
     if(desiredLevel >= troopsData.length - 9) return 9999
 
-    const plus10LvlPower = Math.floor(troopsData[nextTen].powerBase * rarityMultiplier[rarity]) - Math.floor(troopsData[currentTen].powerBase * rarityMultiplier[rarity])
+    const plus10LvlPower = Math.floor(getPower(nextTen+1, rarity)) - Math.floor(getPower(currentTen+1, rarity))
     let plus10LvlCost = troopsData[nextTen].totalCubeCost - troopsData[currentTen].totalCubeCost
     
     if(useCorePriority) {
@@ -124,7 +138,7 @@ const getResourcesPerPower = (unit) => {
 
     const resourcesPerPower = plus10LvlCost/plus10LvlPower
 
-    console.log(`${rarity.toUpperCase()} ${unit.dataset.type} lvl ${desiredLevel} \n${plus10LvlPower} power for ${plus10LvlCost} \nCost = ${Math.round(resourcesPerPower)} ${useCorePriority? 'Core':'Cube'} per power`)
+    // console.log(`${rarity.toUpperCase()} ${unit.dataset.type} lvl ${desiredLevel} \n${plus10LvlPower} power for ${plus10LvlCost} \nCost = ${Math.round(resourcesPerPower)} ${useCorePriority? 'Core':'Cube'} per power`)
 
     return resourcesPerPower;
 }
@@ -223,7 +237,7 @@ const setNewProfile = async () => {
 
 const loadTroops = async () => {
     const data = await storage.getItem('TroopsData', lastUsedProfile, 'LGTroopsCalculator') || null
-    console.log(`LOAD ${lastUsedProfile} data :`, data)
+    // console.log(`LOAD ${lastUsedProfile} data :`, data)
 
     if (!data) return
 
@@ -329,6 +343,7 @@ const autoUpgrade = () => {
         let u = document.querySelector('.most_effective')
 
         if(!u) {
+            console.log('NO BEST OPTION')
             clearInterval(upgrader)
             return
         }
@@ -375,6 +390,7 @@ const autoUpgrade = () => {
         }
 
         if( !stillHasResources ) {
+            console.log('NO MORE RESOURCES')
             clearInterval(upgrader)
             ulvl.value = v;
             updateUnitCostLine(u, true)
