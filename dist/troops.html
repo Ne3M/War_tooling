@@ -21,7 +21,7 @@
                 <strong>Priority</strong>
                 Neocube
                 <label class="toggle">
-                    <input type="checkbox" id="resourcePriority" name="resourcePriority" />
+                    <input type="checkbox" id="resourcePriority" name="resourcePriority" checked />
                     <span class="slider"></span>
                 </label>
                 Turbo Core
@@ -34,11 +34,13 @@
         </div>
 
         <div class="ressources">
+            <div><label for="redCubes"><img src="images/red_cube.png" alt=""><span>Red Cubes</span> <input name="redCubes" id="redCubes" type="text" value="0" /></label></div>           
+            <div><label for="redCores"><img src="images/red_core.png" alt=""><span>Red Cores</span> <input name="redCores" id="redCores" type="text" value="0" /></label></div>
             <div><label for="tankCores"><img src="images/tank_core.png" width="66" height="68" alt=""><span>Tank Cores</span> <input name="tankCores" id="tankCores" type="text" value="0" /></label></div>
             <div><label for="mechCores"><img src="images/mech_core.png" width="66" height="68" alt=""><span>Mech Cores</span> <input name="mechCores" id="mechCores" type="text" value="0" /></label></div>
             <div><label for="airCores"><img src="images/air_core.png" width="66" height="68" alt=""><span>Air Cores</span> <input name="airCores" id="airCores" type="text" value="0" /></label></div>
             <div><label for="neocubes"><img src="images/cube.png" alt=""><span>Cubes</span> <input name="neocubes" id="neocubes" type="text" value="0" /></label></div>
-        </div>
+            </div>
 
         <hr>
             <h3>Core cost and power are now up to date, Cube cost known up to lvl 1420</h3>
@@ -46,8 +48,15 @@
 
         <div class="warpower">
             <div class="buttons">
+                <div class="automode">
+                    <label for="lvlup_twins">
+                        Lvlup twins
+                    </label>
+                    <input type="checkbox" id="lvlup_twins">
+                    <button id="auto">Auto</button>
+                </div>
                 <button id="reset">Reset</button>
-                <button id="auto">Auto</button>
+
             </div>
             <div class="power_up">
                 <img src="images/power.png" width="66" height="68" alt="">
@@ -58,6 +67,12 @@
                 <span class="power_value new_power_diff"></span>
             </div>
             <div class="upgrade_costs">
+                <img src="images/red_cube.png" alt="">
+                <span class="cost_value total_redcube_cost">0</span>
+                <span class="spacer"></span>
+                <img src="images/red_core.png" alt="">
+                <span class="cost_value total_redcore_cost">0</span>
+                <span class="spacer"></span>
                 <img src="images/tank_core.png" width="66" height="68" alt="">
                 <span class="cost_value total_tankcore_cost">0</span>
                 <span class="spacer"></span>
@@ -76,7 +91,324 @@
     </header>
 
     <main>
-        <div class="troops_selector">
+        <div class="troops_selector troops_selector--seasonnal">
+
+            <fieldset class="unit" data-rarity="season" data-type="twins">
+                <div class="unit_type">
+                    <input type="checkbox" name="season_twins_1_owned" id="season_twins_1_owned">
+                    <label for="season_twins_1_owned"><img src="images/twins.png" width="563" height="96" alt=""></label>
+                    <select class="merc_level_selector" id="season_twins_1_merc_bonus">
+                        <option value="0">0</option>
+                        <option value="1">1% </option>
+                        <option value="2">2% </option>
+                        <option value="3">3% </option>
+                        <option value="5">5% </option>
+                        <option value="8">7% </option>
+                        <option value="10">9%</option>
+                        <option value="12">12%</option>
+                        <option value="15">15%</option>
+                    </select>
+                </div>
+                <div class="unit_level">
+                    <label>LV</label>
+                    <input type="number" name="season_twins_1_lvl" id="season_twins_1_lvl" placeholder="Current level" value="1" />
+                    <img src="images/arrow.png" width="46" height="41">
+                    <label>LV</label>
+                    <input type="number" name="season_twins_1_flvl" id="season_twins_1_flvl" placeholder="Desired level" value="2" min="1" max="2000" />
+                </div>
+                <div class="power_up">
+                    <img src="images/power.png" width="66" height="68" alt="">
+                    <span class="power_value current_power"></span>
+                    <span><img src="images/arrow.png" width="46" height="41"></span>
+                    <img src="images/power_up.png" alt="">
+                    <span class="power_value new_power"></span>
+                    <span class="power_value new_power_diff"></span>
+                </div>
+                <div class="upgrade_costs">
+                    <img src="images/red_core.png" width="66" height="68" alt="">
+                    <span class="cost_value total_core_cost"></span>
+                    <span class="spacer"></span>
+                    <img src="images/red_cube.png" alt="">
+                    <span class="cost_value total_cube_cost"></span>
+                </div>
+            </fieldset>
+            <fieldset class="unit" data-rarity="season" data-type="twins">
+                <div class="unit_type">
+                    <input type="checkbox" name="season_twins_2_owned" id="season_twins_2_owned">
+                    <label for="season_twins_2_owned"><img src="images/twins.png" width="563" height="96" alt=""></label>
+                    <select class="merc_level_selector" id="season_twins_2_merc_bonus">
+                        <option value="0">0</option>
+                        <option value="1">1% </option>
+                        <option value="2">2% </option>
+                        <option value="3">3% </option>
+                        <option value="5">5% </option>
+                        <option value="8">7% </option>
+                        <option value="10">9%</option>
+                        <option value="12">12%</option>
+                        <option value="15">15%</option>
+                    </select>
+                </div>
+                <div class="unit_level">
+                    <label>LV</label>
+                    <input type="number" name="season_twins_2_lvl" id="season_twins_2_lvl" placeholder="Current level" value="1" />
+                    <img src="images/arrow.png" width="46" height="41">
+                    <label>LV</label>
+                    <input type="number" name="season_twins_2_flvl" id="season_twins_2_flvl" placeholder="Desired level" value="2" min="1" max="2000" />
+                </div>
+                <div class="power_up">
+                    <img src="images/power.png" width="66" height="68" alt="">
+                    <span class="power_value current_power"></span>
+                    <span><img src="images/arrow.png" width="46" height="41"></span>
+                    <img src="images/power_up.png" alt="">
+                    <span class="power_value new_power"></span>
+                    <span class="power_value new_power_diff"></span>
+                </div>
+                <div class="upgrade_costs">
+                    <img src="images/red_core.png" width="66" height="68" alt="">
+                    <span class="cost_value total_core_cost"></span>
+                    <span class="spacer"></span>
+                    <img src="images/red_cube.png" alt="">
+                    <span class="cost_value total_cube_cost"></span>
+                </div>
+            </fieldset>
+            <fieldset class="unit" data-rarity="season" data-type="twins">
+                <div class="unit_type">
+                    <input type="checkbox" name="season_twins_3_owned" id="season_twins_3_owned">
+                    <label for="season_twins_3_owned"><img src="images/twins.png" width="563" height="96" alt=""></label>
+                    <select class="merc_level_selector" id="season_twins_3_merc_bonus">
+                        <option value="0">0</option>
+                        <option value="1">1% </option>
+                        <option value="2">2% </option>
+                        <option value="3">3% </option>
+                        <option value="5">5% </option>
+                        <option value="8">7% </option>
+                        <option value="10">9%</option>
+                        <option value="12">12%</option>
+                        <option value="15">15%</option>
+                    </select>
+                </div>
+                <div class="unit_level">
+                    <label>LV</label>
+                    <input type="number" name="season_twins_3_lvl" id="season_twins_3_lvl" placeholder="Current level" value="1" />
+                    <img src="images/arrow.png" width="46" height="41">
+                    <label>LV</label>
+                    <input type="number" name="season_twins_3_flvl" id="season_twins_3_flvl" placeholder="Desired level" value="2" min="1" max="2000" />
+                </div>
+                <div class="power_up">
+                    <img src="images/power.png" width="66" height="68" alt="">
+                    <span class="power_value current_power"></span>
+                    <span><img src="images/arrow.png" width="46" height="41"></span>
+                    <img src="images/power_up.png" alt="">
+                    <span class="power_value new_power"></span>
+                    <span class="power_value new_power_diff"></span>
+                </div>
+                <div class="upgrade_costs">
+                    <img src="images/red_core.png" width="66" height="68" alt="">
+                    <span class="cost_value total_core_cost"></span>
+                    <span class="spacer"></span>
+                    <img src="images/red_cube.png" alt="">
+                    <span class="cost_value total_cube_cost"></span>
+                </div>
+            </fieldset>
+            <fieldset class="unit" data-rarity="season" data-type="twins">
+                <div class="unit_type">
+                    <input type="checkbox" name="season_twins_4_owned" id="season_twins_4_owned">
+                    <label for="season_twins_4_owned"><img src="images/twins.png" width="563" height="96" alt=""></label>
+                    <select class="merc_level_selector" id="season_twins_4_merc_bonus">
+                        <option value="0">0</option>
+                        <option value="1">1% </option>
+                        <option value="2">2% </option>
+                        <option value="3">3% </option>
+                        <option value="5">5% </option>
+                        <option value="8">7% </option>
+                        <option value="10">9%</option>
+                        <option value="12">12%</option>
+                        <option value="15">15%</option>
+                    </select>
+                </div>
+                <div class="unit_level">
+                    <label>LV</label>
+                    <input type="number" name="season_twins_4_lvl" id="season_twins_4_lvl" placeholder="Current level" value="1" />
+                    <img src="images/arrow.png" width="46" height="41">
+                    <label>LV</label>
+                    <input type="number" name="season_twins_4_flvl" id="season_twins_4_flvl" placeholder="Desired level" value="2" min="1" max="2000" />
+                </div>
+                <div class="power_up">
+                    <img src="images/power.png" width="66" height="68" alt="">
+                    <span class="power_value current_power"></span>
+                    <span><img src="images/arrow.png" width="46" height="41"></span>
+                    <img src="images/power_up.png" alt="">
+                    <span class="power_value new_power"></span>
+                    <span class="power_value new_power_diff"></span>
+                </div>
+                <div class="upgrade_costs">
+                    <img src="images/red_core.png" width="66" height="68" alt="">
+                    <span class="cost_value total_core_cost"></span>
+                    <span class="spacer"></span>
+                    <img src="images/red_cube.png" alt="">
+                    <span class="cost_value total_cube_cost"></span>
+                </div>
+            </fieldset>
+            <fieldset class="unit" data-rarity="season" data-type="twins">
+                <div class="unit_type">
+                    <input type="checkbox" name="season_twins_5_owned" id="season_twins_5_owned">
+                    <label for="season_twins_5_owned"><img src="images/twins.png" width="563" height="96" alt=""></label>
+                    <select class="merc_level_selector" id="season_twins_5_merc_bonus">
+                        <option value="0">0</option>
+                        <option value="1">1% </option>
+                        <option value="2">2% </option>
+                        <option value="3">3% </option>
+                        <option value="5">5% </option>
+                        <option value="8">7% </option>
+                        <option value="10">9%</option>
+                        <option value="12">12%</option>
+                        <option value="15">15%</option>
+                    </select>
+                </div>
+                <div class="unit_level">
+                    <label>LV</label>
+                    <input type="number" name="season_twins_5_lvl" id="season_twins_5_lvl" placeholder="Current level" value="1" />
+                    <img src="images/arrow.png" width="46" height="41">
+                    <label>LV</label>
+                    <input type="number" name="season_twins_5_flvl" id="season_twins_5_flvl" placeholder="Desired level" value="2" min="1" max="2000" />
+                </div>
+                <div class="power_up">
+                    <img src="images/power.png" width="66" height="68" alt="">
+                    <span class="power_value current_power"></span>
+                    <span><img src="images/arrow.png" width="46" height="41"></span>
+                    <img src="images/power_up.png" alt="">
+                    <span class="power_value new_power"></span>
+                    <span class="power_value new_power_diff"></span>
+                </div>
+                <div class="upgrade_costs">
+                    <img src="images/red_core.png" width="66" height="68" alt="">
+                    <span class="cost_value total_core_cost"></span>
+                    <span class="spacer"></span>
+                    <img src="images/red_cube.png" alt="">
+                    <span class="cost_value total_cube_cost"></span>
+                </div>
+            </fieldset>
+            <fieldset class="unit" data-rarity="season" data-type="twins">
+                <div class="unit_type">
+                    <input type="checkbox" name="season_twins_6_owned" id="season_twins_6_owned">
+                    <label for="season_twins_6_owned"><img src="images/twins.png" width="563" height="96" alt=""></label>
+                    <select class="merc_level_selector" id="season_twins_6_merc_bonus">
+                        <option value="0">0</option>
+                        <option value="1">1% </option>
+                        <option value="2">2% </option>
+                        <option value="3">3% </option>
+                        <option value="5">5% </option>
+                        <option value="8">7% </option>
+                        <option value="10">9%</option>
+                        <option value="12">12%</option>
+                        <option value="15">15%</option>
+                    </select>
+                </div>
+                <div class="unit_level">
+                    <label>LV</label>
+                    <input type="number" name="season_twins_6_lvl" id="season_twins_6_lvl" placeholder="Current level" value="1" />
+                    <img src="images/arrow.png" width="46" height="41">
+                    <label>LV</label>
+                    <input type="number" name="season_twins_6_flvl" id="season_twins_6_flvl" placeholder="Desired level" value="2" min="1" max="2000" />
+                </div>
+                <div class="power_up">
+                    <img src="images/power.png" width="66" height="68" alt="">
+                    <span class="power_value current_power"></span>
+                    <span><img src="images/arrow.png" width="46" height="41"></span>
+                    <img src="images/power_up.png" alt="">
+                    <span class="power_value new_power"></span>
+                    <span class="power_value new_power_diff"></span>
+                </div>
+                <div class="upgrade_costs">
+                    <img src="images/red_core.png" width="66" height="68" alt="">
+                    <span class="cost_value total_core_cost"></span>
+                    <span class="spacer"></span>
+                    <img src="images/red_cube.png" alt="">
+                    <span class="cost_value total_cube_cost"></span>
+                </div>
+            </fieldset>
+
+            <fieldset class="unit premium" data-rarity="season" data-type="twins">
+                <div class="unit_type">
+                    <input type="checkbox" name="season_twins_7_owned" id="season_twins_7_owned">
+                    <label for="season_twins_7_owned"><img src="images/twins.png" width="563" height="96" alt=""></label>
+                    <select class="merc_level_selector" id="season_twins_7_merc_bonus">
+                        <option value="0">0</option>
+                        <option value="1">1% </option>
+                        <option value="2">2% </option>
+                        <option value="3">3% </option>
+                        <option value="5">5% </option>
+                        <option value="8">7% </option>
+                        <option value="10">9%</option>
+                        <option value="12">12%</option>
+                        <option value="15">15%</option>
+                    </select>
+                </div>
+                <div class="unit_level">
+                    <label>LV</label>
+                    <input type="number" name="season_twins_7_lvl" id="season_twins_7_lvl" placeholder="Current level" value="1" />
+                    <img src="images/arrow.png" width="46" height="41">
+                    <label>LV</label>
+                    <input type="number" name="season_twins_7_flvl" id="season_twins_7_flvl" placeholder="Desired level" value="2" min="1" max="2000" />
+                </div>
+                <div class="power_up">
+                    <img src="images/power.png" width="66" height="68" alt="">
+                    <span class="power_value current_power"></span>
+                    <span><img src="images/arrow.png" width="46" height="41"></span>
+                    <img src="images/power_up.png" alt="">
+                    <span class="power_value new_power"></span>
+                    <span class="power_value new_power_diff"></span>
+                </div>
+                <div class="upgrade_costs">
+                    <img src="images/red_core.png" width="66" height="68" alt="">
+                    <span class="cost_value total_core_cost"></span>
+                    <span class="spacer"></span>
+                    <img src="images/red_cube.png" alt="">
+                    <span class="cost_value total_cube_cost"></span>
+                </div>
+            </fieldset>
+            <fieldset class="unit premium" data-rarity="season" data-type="twins">
+                <div class="unit_type">
+                    <input type="checkbox" name="season_twins_8_owned" id="season_twins_8_owned">
+                    <label for="season_twins_8_owned"><img src="images/twins.png" width="563" height="96" alt=""></label>
+                    <select class="merc_level_selector" id="season_twins_8_merc_bonus">
+                        <option value="0">0</option>
+                        <option value="1">1% </option>
+                        <option value="2">2% </option>
+                        <option value="3">3% </option>
+                        <option value="5">5% </option>
+                        <option value="8">7% </option>
+                        <option value="10">9%</option>
+                        <option value="12">12%</option>
+                        <option value="15">15%</option>
+                    </select>
+                </div>
+                <div class="unit_level">
+                    <label>LV</label>
+                    <input type="number" name="season_twins_8_lvl" id="season_twins_8_lvl" placeholder="Current level" value="1" />
+                    <img src="images/arrow.png" width="46" height="41">
+                    <label>LV</label>
+                    <input type="number" name="season_twins_8_flvl" id="season_twins_8_flvl" placeholder="Desired level" value="2" min="1" max="2000" />
+                </div>
+                <div class="power_up">
+                    <img src="images/power.png" width="66" height="68" alt="">
+                    <span class="power_value current_power"></span>
+                    <span><img src="images/arrow.png" width="46" height="41"></span>
+                    <img src="images/power_up.png" alt="">
+                    <span class="power_value new_power"></span>
+                    <span class="power_value new_power_diff"></span>
+                </div>
+                <div class="upgrade_costs">
+                    <img src="images/red_core.png" width="66" height="68" alt="">
+                    <span class="cost_value total_core_cost"></span>
+                    <span class="spacer"></span>
+                    <img src="images/red_cube.png" alt="">
+                    <span class="cost_value total_cube_cost"></span>
+                </div>
+            </fieldset>
+
+        </div>
+        <div class="troops_selector troops_selector--regular">
             <fieldset class="unit" data-rarity="common" data-type="tank">
                 <div class="unit_type">
                     <input type="checkbox" name="common_tank_1_owned" id="common_tank_1_owned">

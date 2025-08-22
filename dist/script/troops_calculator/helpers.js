@@ -24,10 +24,14 @@ const init = async () => {
 const getPower = (lvl, rarity) => {
     
     const modifier = lvl > 1000 ? rarityModifier[rarity] : 0;
-    console.log({lvl:lvl, modifier, rarity, result: (troopsData[lvl-1].powerBase * rarityMultiplier[rarity]) + modifier})
+    // console.log({lvl:lvl, rarity, result: troopsData[lvl-1]})
+
+    // console.log({lvl:lvl, modifier, rarity, result: (troopsData[lvl-1].powerBase * rarityMultiplier[rarity]) + modifier})
 
     return (troopsData[lvl-1].powerBase * rarityMultiplier[rarity]) + modifier
 }
+
+const getTwinPower = lvl => twinsData[lvl-1].powerBase
 
 const updateUnitCostLine = (currentUnit, recalculate = false) => {
     const rarity = currentUnit.dataset.rarity
@@ -42,10 +46,22 @@ const updateUnitCostLine = (currentUnit, recalculate = false) => {
 
     if (currentLevel === 0) return
 
-    const coreCost = (desiredLevel == 0)? 0 : troopsData[desiredLevel-1].totalCoreCost - troopsData[currentLevel-1].totalCoreCost
-    const cubeCost = (desiredLevel == 0)? 0 : troopsData[desiredLevel-1].totalCubeCost - troopsData[currentLevel-1].totalCubeCost
-    const currentPower = (currentLevel == 0)? 0 : Math.round(getPower(currentLevel, rarity) * mercBonus)
-    const nextPower = (desiredLevel == 0)? 0 : Math.round(getPower(desiredLevel, rarity) * mercBonus)
+    let coreCost
+    let cubeCost
+    let currentPower
+    let nextPower
+
+    if(rarity === "season") {
+        coreCost = (desiredLevel == 0)? 0 : twinsData[desiredLevel-1].totalCoreCost - twinsData[currentLevel-1].totalCoreCost
+        cubeCost = (desiredLevel == 0)? 0 : twinsData[desiredLevel-1].totalCubeCost - twinsData[currentLevel-1].totalCubeCost
+        currentPower = (currentLevel == 0)? 0 : Math.round(getTwinPower(currentLevel) * mercBonus)
+        nextPower = (desiredLevel == 0)? 0 : Math.round(getTwinPower(desiredLevel) * mercBonus)
+    } else {
+        coreCost = (desiredLevel == 0)? 0 : troopsData[desiredLevel-1].totalCoreCost - troopsData[currentLevel-1].totalCoreCost
+        cubeCost = (desiredLevel == 0)? 0 : troopsData[desiredLevel-1].totalCubeCost - troopsData[currentLevel-1].totalCubeCost
+        currentPower = (currentLevel == 0)? 0 : Math.round(getPower(currentLevel, rarity) * mercBonus)
+        nextPower = (desiredLevel == 0)? 0 : Math.round(getPower(desiredLevel, rarity) * mercBonus)
+    }
     
     coreCostResult.innerHTML = (coreCost > 0) ? coreCost : "0";
     cubeCostResult.innerHTML = (cubeCost > 0) ? cubeCost : "0";
@@ -57,14 +73,23 @@ const updateUnitCostLine = (currentUnit, recalculate = false) => {
 }
 
 const updateTotalWarpower = () => {
-    const units = document.querySelectorAll('.troops_selector .unit:not(.premium), .troops_selector .unit:has(input:checked)');
+    const units = document.querySelectorAll('.troops_selector--regular .unit:not(.premium), .troops_selector--regular .unit:has(input:checked)');
+    const twins = document.querySelectorAll('.troops_selector--seasonnal .unit:not(.premium), .troops_selector--seasonnal .unit:has(input:checked)');
     let currentWarPower = 0;
     let futureWarPower = 0;
+    let redCoreCost = 0;
     let tankCoreCost = 0;
     let mechCoreCost = 0;
     let airCoreCost = 0;
     let cubeCost = 0;
+    let redCubeCost = 0;
     
+    for(let twin of twins) {
+        currentWarPower += parseInt(twin.querySelector('.current_power').innerHTML || 0)
+        futureWarPower += parseInt(twin.querySelector('.new_power').innerHTML || 0)
+        redCoreCost += parseInt(twin.querySelector('.total_core_cost').innerHTML || 0)
+        redCubeCost += parseInt(twin.querySelector('.total_cube_cost').innerHTML || 0);
+    }
 
     for(let unit of units){
         unit.classList.remove('most_effective');
@@ -74,15 +99,18 @@ const updateTotalWarpower = () => {
         if(unit.dataset.type === "mech") mechCoreCost += parseInt(unit.querySelector('.total_core_cost').innerHTML || 0)
         if(unit.dataset.type === "air") airCoreCost += parseInt(unit.querySelector('.total_core_cost').innerHTML || 0)
         cubeCost += parseInt(unit.querySelector('.total_cube_cost').innerHTML || 0);
-
-        document.querySelector('.warpower .current_power').innerHTML = currentWarPower;
-        document.querySelector('.warpower .new_power').innerHTML = futureWarPower;
-        document.querySelector('.warpower .new_power_diff').innerHTML = (futureWarPower - currentWarPower > 0) ? `(+${futureWarPower - currentWarPower})` : '';;
-        document.querySelector('.warpower .upgrade_costs .total_tankcore_cost').innerHTML = tankCoreCost;
-        document.querySelector('.warpower .upgrade_costs .total_mechcore_cost').innerHTML = mechCoreCost;
-        document.querySelector('.warpower .upgrade_costs .total_aircore_cost').innerHTML = airCoreCost;
-        document.querySelector('.warpower .upgrade_costs .total_cube_cost').innerHTML = cubeCost;
     }
+
+    document.querySelector('.warpower .current_power').innerHTML = currentWarPower;
+    document.querySelector('.warpower .new_power').innerHTML = futureWarPower;
+    document.querySelector('.warpower .new_power_diff').innerHTML = (futureWarPower - currentWarPower > 0) ? `(+${futureWarPower - currentWarPower})` : '';
+    document.querySelector('.warpower .upgrade_costs .total_tankcore_cost').innerHTML = tankCoreCost;
+    document.querySelector('.warpower .upgrade_costs .total_mechcore_cost').innerHTML = mechCoreCost;
+    document.querySelector('.warpower .upgrade_costs .total_aircore_cost').innerHTML = airCoreCost;
+    document.querySelector('.warpower .upgrade_costs .total_cube_cost').innerHTML = cubeCost;
+
+    document.querySelector('.warpower .upgrade_costs .total_redcore_cost').innerHTML = redCoreCost;
+    document.querySelector('.warpower .upgrade_costs .total_redcube_cost').innerHTML = redCubeCost;
 
     getMostEffectiveUnit()
     
@@ -90,7 +118,9 @@ const updateTotalWarpower = () => {
 
 const getMostEffectiveUnit = () => {
 
-    const units = document.querySelectorAll('.troops_selector .unit:not(.premium), .troops_selector .unit:has(input:checked)');
+    const units = document.querySelectorAll('.troops_selector--regular .unit:not(.premium), .troops_selector--regular .unit:has(input:checked)');
+    const twins = document.querySelectorAll('.troops_selector--seasonnal .unit:not(.premium), .troops_selector--seasonnal .unit:has(input:checked)');
+
     let mostEffectiveUnits = [];
     let mostEffectiveCost = 999999;
 
@@ -109,16 +139,31 @@ const getMostEffectiveUnit = () => {
             }
         }
     }
-    // console.log({mostEffectiveUnits, mostEffectiveCost})
-    for( let mostEffectiveUnit of mostEffectiveUnits) {
-        mostEffectiveUnit.classList.add('most_effective')
+
+    let mostEffectiveTwins;
+    let mostEffectiveTwinslvl = 1000;
+
+    for(let twin of twins) {
+       twin.classList.remove('most_effective');
+       if(twin.classList.contains('spent')) continue 
+       const desiredLevel = parseInt(twin.querySelector('.unit_level input:last-of-type').value)
+       if( desiredLevel < mostEffectiveTwinslvl ) {
+            mostEffectiveTwins = twin;
+            mostEffectiveTwinslvl = desiredLevel
+       }
     }
+
+    // console.log({mostEffectiveUnits, mostEffectiveCost, mostEffectiveTwins, mostEffectiveTwinslvl})
+    for( let mostEffectiveUnit of mostEffectiveUnits) {
+        mostEffectiveUnit?.classList.add('most_effective');
+    }
+    mostEffectiveTwins?.classList.add('most_effective');
 
 }
 
 const getResourcesPerPower = (unit) => {
 
-    const useCorePriority = document.querySelector('#resourcePriority').checked
+    const useCorePriority = document.querySelector('#resourcePriority').checked 
     
     const rarity = unit.dataset.rarity
     // const currentLevel = parseInt(unit.querySelector('.unit_level input').value)
@@ -150,8 +195,20 @@ const getDataFromHTML = () => {
             mechCore: parseInt(document.querySelector('#mechCores').value),
             airCore: parseInt(document.querySelector('#airCores').value),
             neoCube: parseInt(document.querySelector('#neocubes').value),
+            redCore: parseInt(document.querySelector('#redCores').value),
+            redCube: parseInt(document.querySelector('#redCubes').value),
         },
         units: {
+            season: {
+                twins1: {currentLevel: parseInt(document.querySelector('#season_twins_1_lvl').value), targetLevel: parseInt(document.querySelector('#season_twins_1_flvl').value), mercBonus: parseInt(document.querySelector('#season_twins_1_merc_bonus').value)},
+                twins2: {currentLevel: parseInt(document.querySelector('#season_twins_2_lvl').value), targetLevel: parseInt(document.querySelector('#season_twins_2_flvl').value), mercBonus: parseInt(document.querySelector('#season_twins_2_merc_bonus').value)},
+                twins3: {currentLevel: parseInt(document.querySelector('#season_twins_3_lvl').value), targetLevel: parseInt(document.querySelector('#season_twins_3_flvl').value), mercBonus: parseInt(document.querySelector('#season_twins_3_merc_bonus').value)},
+                twins4: {currentLevel: parseInt(document.querySelector('#season_twins_4_lvl').value), targetLevel: parseInt(document.querySelector('#season_twins_4_flvl').value), mercBonus: parseInt(document.querySelector('#season_twins_4_merc_bonus').value)},
+                twins5: {currentLevel: parseInt(document.querySelector('#season_twins_5_lvl').value), targetLevel: parseInt(document.querySelector('#season_twins_5_flvl').value), mercBonus: parseInt(document.querySelector('#season_twins_5_merc_bonus').value)},
+                twins6: {currentLevel: parseInt(document.querySelector('#season_twins_6_lvl').value), targetLevel: parseInt(document.querySelector('#season_twins_6_flvl').value), mercBonus: parseInt(document.querySelector('#season_twins_6_merc_bonus').value)},
+                twins7: {currentLevel: parseInt(document.querySelector('#season_twins_7_lvl').value), targetLevel: parseInt(document.querySelector('#season_twins_7_flvl').value), mercBonus: parseInt(document.querySelector('#season_twins_7_merc_bonus').value), owned: document.querySelector('#season_twins_7_owned').checked},
+                twins8: {currentLevel: parseInt(document.querySelector('#season_twins_8_lvl').value), targetLevel: parseInt(document.querySelector('#season_twins_8_flvl').value), mercBonus: parseInt(document.querySelector('#season_twins_8_merc_bonus').value), owned: document.querySelector('#season_twins_5_owned').checked},
+            },
             common: {
                 tank1: {currentLevel: parseInt(document.querySelector('#common_tank_1_lvl').value), targetLevel: parseInt(document.querySelector('#common_tank_1_flvl').value), mercBonus: parseInt(document.querySelector('#common_tank_1_merc_bonus').value)},
                 tank2: {currentLevel: parseInt(document.querySelector('#common_tank_2_lvl').value), targetLevel: parseInt(document.querySelector('#common_tank_2_flvl').value), mercBonus: parseInt(document.querySelector('#common_tank_2_merc_bonus').value)},
@@ -246,6 +303,17 @@ const loadTroops = async () => {
     document.querySelector('#airCores').value = data.resources.airCore
     document.querySelector('#neocubes').value = data.resources.neoCube
 
+    document.querySelector('#redCores').value = data.resources.redCore
+    document.querySelector('#redCubes').value = data.resources.redCube
+
+    document.querySelector('#season_twins_1_lvl').value = data.units.season?.twins1.currentLevel ?? 1
+    document.querySelector('#season_twins_2_lvl').value = data.units.season?.twins2.currentLevel ?? 1
+    document.querySelector('#season_twins_3_lvl').value = data.units.season?.twins3.currentLevel ?? 1
+    document.querySelector('#season_twins_4_lvl').value = data.units.season?.twins4.currentLevel ?? 1
+    document.querySelector('#season_twins_5_lvl').value = data.units.season?.twins5.currentLevel ?? 1
+    document.querySelector('#season_twins_6_lvl').value = data.units.season?.twins6.currentLevel ?? 1
+    document.querySelector('#season_twins_7_lvl').value = data.units.season?.twins7.currentLevel ?? 1
+    document.querySelector('#season_twins_8_lvl').value = data.units.season?.twins8.currentLevel ?? 1
     document.querySelector('#common_tank_1_lvl').value = data.units.common.tank1.currentLevel
     document.querySelector('#common_tank_2_lvl').value = data.units.common.tank2.currentLevel
     document.querySelector('#common_mech_1_lvl').value = data.units.common.mech1.currentLevel
@@ -265,6 +333,14 @@ const loadTroops = async () => {
     document.querySelector('#lego_air_1_lvl').value = data.units.lego.air1.currentLevel
     document.querySelector('#lego_air_2_lvl').value = data.units.lego.air2.currentLevel
 
+    document.querySelector('#season_twins_1_flvl').value = data.units.season?.twins1.targetLevel ?? 2
+    document.querySelector('#season_twins_2_flvl').value = data.units.season?.twins2.targetLevel ?? 2
+    document.querySelector('#season_twins_3_flvl').value = data.units.season?.twins3.targetLevel ?? 2
+    document.querySelector('#season_twins_4_flvl').value = data.units.season?.twins4.targetLevel ?? 2
+    document.querySelector('#season_twins_5_flvl').value = data.units.season?.twins5.targetLevel ?? 2
+    document.querySelector('#season_twins_6_flvl').value = data.units.season?.twins6.targetLevel ?? 2
+    document.querySelector('#season_twins_7_flvl').value = data.units.season?.twins7.targetLevel ?? 2
+    document.querySelector('#season_twins_8_flvl').value = data.units.season?.twins8.targetLevel ?? 2
     document.querySelector('#common_tank_1_flvl').value = data.units.common.tank1.targetLevel
     document.querySelector('#common_tank_2_flvl').value = data.units.common.tank2.targetLevel
     document.querySelector('#common_mech_1_flvl').value = data.units.common.mech1.targetLevel
@@ -284,6 +360,14 @@ const loadTroops = async () => {
     document.querySelector('#lego_air_1_flvl').value = data.units.lego.air1.targetLevel
     document.querySelector('#lego_air_2_flvl').value = data.units.lego.air2.targetLevel
 
+    document.querySelector('#season_twins_1_merc_bonus').value = data.units.season?.twins1.mercBonus ?? 0
+    document.querySelector('#season_twins_2_merc_bonus').value = data.units.season?.twins2.mercBonus ?? 0
+    document.querySelector('#season_twins_3_merc_bonus').value = data.units.season?.twins3.mercBonus ?? 0
+    document.querySelector('#season_twins_4_merc_bonus').value = data.units.season?.twins4.mercBonus ?? 0
+    document.querySelector('#season_twins_5_merc_bonus').value = data.units.season?.twins5.mercBonus ?? 0
+    document.querySelector('#season_twins_6_merc_bonus').value = data.units.season?.twins6.mercBonus ?? 0
+    document.querySelector('#season_twins_7_merc_bonus').value = data.units.season?.twins7.mercBonus ?? 0
+    document.querySelector('#season_twins_8_merc_bonus').value = data.units.season?.twins8.mercBonus ?? 0
     document.querySelector('#common_tank_1_merc_bonus').value = data.units.common.tank1.mercBonus
     document.querySelector('#common_tank_2_merc_bonus').value = data.units.common.tank2.mercBonus
     document.querySelector('#common_mech_1_merc_bonus').value = data.units.common.mech1.mercBonus
@@ -303,6 +387,8 @@ const loadTroops = async () => {
     document.querySelector('#lego_air_1_merc_bonus').value = data.units.lego.air1.mercBonus
     document.querySelector('#lego_air_2_merc_bonus').value = data.units.lego.air2.mercBonus
 
+    document.querySelector('#season_twins_7_owned').checked = data.units.season?.twins7.owned ?? "false"
+    document.querySelector('#season_twins_8_owned').checked = data.units.season?.twins8.owned ?? "false"
     document.querySelector('#rare_tank_1_owned').checked = data.units.rare.tank1.owned
     document.querySelector('#rare_tank_2_owned').checked = data.units.rare.tank2.owned
     document.querySelector('#rare_air_owned').checked = data.units.rare.air1.owned
@@ -320,13 +406,13 @@ const loadTroops = async () => {
 const resetUpgrades = () => {
     document.querySelectorAll('.unit').forEach( u => {
         u.querySelector('[id$=flvl]').value = u.querySelector('[id$=lvl]').value;
+        u.classList.remove('spent')
         updateUnitCostLine(u)
     })
     updateTotalWarpower()
 }
 
 const autoUpgrade = () => {
-    let stillHasResources = true;
 
     let tankCores = document.querySelector('#tankCores')
     let mechCores = document.querySelector('#mechCores')
@@ -340,62 +426,80 @@ const autoUpgrade = () => {
     resetUpgrades();
 
     const upgrader = setInterval(() => {
-        let u = document.querySelector('.most_effective')
+        let u = document.querySelector('.most_effective:not([data-type="twins"])')
 
         if(!u) {
-            console.log('NO BEST OPTION')
+            console.log('NO BEST REGULAR TROOP')
             clearInterval(upgrader)
             return
         }
 
         let uType = u.dataset.type
-        let ulvl = document.querySelector('.most_effective [id$=flvl]')
+        let ulvl = u.querySelector('[id$=flvl]')
         let v = parseInt(ulvl.value)
         ulvl.value = Math.floor((v+10)/10)*10
         updateUnitCostLine(u, true)
 
         if( uType === 'tank' && parseInt(tankCoreTotal.innerHTML) >= parseInt(tankCores.value) ) {
             ulvl.value = v
-            for( tank of document.querySelectorAll('[data-type="tank"')) {
+            for( tank of document.querySelectorAll('[data-type="tank"]')) {
                 tank.classList.add('spent')
             }
         }
         if( uType === 'mech' && parseInt(mechCoreTotal.innerHTML) >= parseInt(mechCores.value) ) {
             ulvl.value = v
-            for( mech of document.querySelectorAll('[data-type="mech"')) {
+            for( mech of document.querySelectorAll('[data-type="mech"]')) {
                 mech.classList.add('spent')
             }
         }
         if( uType === 'air' && parseInt(airCoreTotal.innerHTML) >= parseInt(airCores.value) ) {
             ulvl.value = v
-            for( air of document.querySelectorAll('[data-type="air"')) {
+            for( air of document.querySelectorAll('[data-type="air"]')) {
                 air.classList.add('spent')
             }
         }
 
-        updateUnitCostLine(u, true)
-
-        if(
-            (
-                ( parseInt(tankCoreTotal.innerHTML) >= parseInt(tankCores.value) ) 
-                && 
-                ( parseInt(mechCoreTotal.innerHTML) >= parseInt(mechCores.value) )  
-                &&
-                ( parseInt(airCoreTotal.innerHTML) >= parseInt(airCores.value) )
-            )
-            ||
-            ( parseInt(cubeTotal.innerHTML) >= parseInt(cubes.value) ) 
-        ) {
-            stillHasResources = false
-        }
-
-        if( !stillHasResources ) {
-            console.log('NO MORE RESOURCES')
+        if( parseInt(cubeTotal.innerHTML) >= parseInt(cubes.value) ) {
             clearInterval(upgrader)
             ulvl.value = v;
-            updateUnitCostLine(u, true)
         }
+        updateUnitCostLine(u, true)
+
     }, 5);
 
+    const shouldUpgradeTwins = document.querySelector('#lvlup_twins').checked
+    if( !shouldUpgradeTwins ) return
 
-}
+    let redCores = document.querySelector('#redCores')
+    let redCoreTotal = document.querySelector('.total_redcore_cost')
+    let redCubes = document.querySelector('#redCubes')
+    let redCubeTotal = document.querySelector('.total_redcube_cost')
+
+    const twinsUpgrader = setInterval(() => {
+        let u = document.querySelector('.most_effective[data-type="twins"]')
+
+        if(!u) {
+            console.log('NO BEST TWIN')
+            clearInterval(twinsUpgrader)
+            return
+        }
+
+        let ulvl = u.querySelector('[id$=flvl]')
+        let v = parseInt(ulvl.value)
+        ulvl.value = v+1
+        updateUnitCostLine(u, true)
+
+        if( parseInt(redCoreTotal.innerHTML) >= parseInt(redCores.value) || parseInt(redCubeTotal.innerHTML) >= parseInt(redCubes.value) ) {
+            console.log(u, redCoreTotal.innerHTML, redCores.value, ulvl.value, v)
+            ulvl.value = v
+            for( twin of document.querySelectorAll('[data-type="twins"')) {
+                twin.classList.add('spent')
+            }
+        }
+        updateUnitCostLine(u, true)     
+        
+        
+    }, 1);
+    
+
+    }

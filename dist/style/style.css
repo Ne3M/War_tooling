@@ -78,6 +78,7 @@ body {
   }
 
   .resources_priority {
+    display: none;
     vertical-align: middle;
     text-align: center;
     margin-bottom: 1rem;
@@ -402,9 +403,18 @@ display: none;
   position: absolute;
   top: 1rem;
   right: 1rem;
-  max-width: 5rem;
+  /* max-width: 5rem; */
   text-align: right;
+
+  @media (width <= 800px) {
+    position: static;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+  }
 }
+
+
 .warpower button {
   margin-bottom: .375rem;
   background: white;
@@ -414,6 +424,16 @@ display: none;
   text-transform: uppercase;
   font-weight: bold;
 }
+.warpower .buttons .automode {
+  white-space: nowrap;
+    @media (width <= 800px) {
+      display: inline-block;
+    }
+}
+.warpower .automode label {
+  display: inline-block;
+}
+
 .warpower button:after {
   content: "";
   position: absolute;
@@ -431,6 +451,10 @@ display: none;
   background: radial-gradient(circle at 50% 120%, rgba(128,253,109,1) 0%, rgba(68,188,102,1) 80%);
 } 
 
+.warpower .buttons :checked + #auto {
+  background: rgb(253, 109, 109);
+  background: radial-gradient(circle at 50% 120%, rgb(240, 146, 146) 0%, rgb(188, 68, 68)80%);
+} 
 
 .troops_selector {
   display: flex;
