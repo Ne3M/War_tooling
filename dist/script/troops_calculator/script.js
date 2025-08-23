@@ -6,7 +6,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     await init()
 
-    document.querySelector('.troops_selector').addEventListener('input', async (e) => {
+    document.querySelector('.troops_selector--seasonnal').addEventListener('input', async (e) => {
+        updateUnitCostLine(e.target.closest('.unit'), true)
+        await saveTroops()
+    })
+    document.querySelector('.troops_selector--regular').addEventListener('input', async (e) => {
         updateUnitCostLine(e.target.closest('.unit'), true)
         await saveTroops()
     })
@@ -15,9 +19,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     })
 
     // You change priority
-    document.querySelector('#resourcePriority').addEventListener('change', async (e) => {
+    /*document.querySelector('#resourcePriority').addEventListener('change', async (e) => {
         getMostEffectiveUnit()
-    })
+    })*/
 
     // You add/select a profile
     document.querySelector('#profile').addEventListener('change', async (e) => {
