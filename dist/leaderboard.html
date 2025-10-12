@@ -116,7 +116,7 @@ color: red
 
         const process = (data) => {
 
-            // console.log({currentData, data})
+            console.log({currentData, data})
             if( !currentData.result.guilds ) {
                 console.log('First set of data')
                 currentData = JSON.parse(JSON.stringify(data))
@@ -216,7 +216,6 @@ color: red
 
         const getAllianceById = async (id = 61) => {
           //console.log('WANNA FETCH ALLIANCE ID : ', id);
-          //return
 
           const url = 'https://ga.chickgoddess.com/gs_api/guilds/get_members';
           const options = {
@@ -267,12 +266,12 @@ color: red
           }
         }
 
-        const updateTop500 = () => {
+        const updateTop500 = async () => {
           const promises = []
           TOP_500_ALLIANCE.forEach((g) => {
               promises.push(getAllianceById(g) )
           })
-          Promise.all(promises).then((values) => {
+          await Promise.all(promises).then((values) => {
             values.forEach(v =>  { 
               process(v)
             })
@@ -281,12 +280,13 @@ color: red
 
         const autoFetch = async (e) => {
 
-          currentData.result.guilds.forEach(g => { g.place = "100+"})
+          currentData.result.guilds?.forEach(g => { g.place = "100+"})
           // console.log(currentData.result.guilds)
           const leaderboard = await getLeaderboard()
           // console.log(leaderboard)
           process(leaderboard)
 
+          await updateTop500()
 
           const promises = []
           currentData.result.guilds.forEach((g, i) => {
@@ -305,7 +305,7 @@ color: red
 
         }
 
-        let currentData = { result:{} };
+        let currentData = { result:{ guilds: []} };
 
         let loginID = sessionStorage.getItem('loginID')
         let sessionID = sessionStorage.getItem('sessionID')
@@ -322,9 +322,9 @@ color: red
         if(storedData) {
           process(JSON.parse(storedData))
         }
-        if(!storedData) {
+       /* if(!storedData) {
           updateTop500()
-        }
+        }*/
 
         document.querySelector('#getdata').addEventListener("click", async (e) => {
           navigator.clipboard.writeText(JSON.stringify(currentData));
