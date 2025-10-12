@@ -137,9 +137,11 @@ color: red
 
 
             // Dedupe
-            console.log('Number of ally before : ', currentData.result.guilds)
-            currentData.result.guilds = [...currentData.result.guilds.reverse().filter((g,i) => i === currentData.result.guilds.indexOf(currentData.result.guilds.find(z => z.name === g.name))) ]
-            console.log('Number of ally after : ', currentData.result.guilds)
+            console.log('Number of ally before : ', currentData.result.guilds || 0)
+            if(currentData.result.guilds != null) {
+              currentData.result.guilds = [...currentData.result.guilds.reverse().filter((g,i) => i === currentData.result.guilds.indexOf(currentData.result.guilds.find(z => z.name === g.name))) ]
+            }
+            console.log('Number of ally after : ', currentData.result.guilds || 0)
 
 
         const storeData = []
