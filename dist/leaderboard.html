@@ -158,6 +158,7 @@ color: red
             <th class='maxpower'> Max Power</th>
             <th class='minpower'> Min Power</th>
             <th class='rank'> Rank</th>
+            <th class='rank'> ID</th>
             </tr>
         `
         currentData.result.guilds
@@ -205,6 +206,7 @@ color: red
             <td class='maxpower'> ${g.max_summary_power.toLocaleString('en-US')}</td>
             <td class='minpower ${g.summary_power < g.max_summary_power * 0.85 ? "bold": ""}'>${ Math.round(g.max_summary_power * 0.85).toLocaleString('en-US')}</td>
             <td class='rank'>${g.place}</td> 
+            <td class='id'>${g.id}</td> 
             </tr>`
         })
         html += "</table>"
