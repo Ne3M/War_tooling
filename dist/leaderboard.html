@@ -201,7 +201,7 @@ color: red
             html += `<tr class='${g.name.includes("FuMiCon")?"fumicon":""} ${(g.place==="100+" || g.place>100)?"outOfLeaderBoard":""}'>
                 <td>${ Math.floor( i / 10 ) +1 }</td>
             <td class='alliance'>${g.name}</td> 
-            <td class='member'> ${(g.members_count || g.current_members || g.guild_current_members).toLocaleString('en-US')}</td>
+            <td class='member'> ${(g.members_count || g.current_members || g.guild_current_members || 0).toLocaleString('en-US')}</td>
             <td class='power ${g.summary_power > g.max_summary_power * 0.85 ? "bold": ""}'> ${g.summary_power.toLocaleString('en-US')}</td>
             <td class='maxpower'> ${g.max_summary_power.toLocaleString('en-US')}</td>
             <td class='minpower ${g.summary_power < g.max_summary_power * 0.85 ? "bold": ""}'>${ Math.round(g.max_summary_power * 0.85).toLocaleString('en-US')}</td>
