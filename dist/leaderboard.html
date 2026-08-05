@@ -18,13 +18,16 @@
       align-items: start;
     }
 
-fieldset {
-  border: none;
-  padding: 0;
+.fieldset {
   margin: 0 0 1rem;
   flex-grow: 1;
   position: sticky;
   top: .5rem;
+}
+fieldset {
+  border: none;
+  padding: 0;
+  margin: 0 0 1rem;
 }
 
 label {
@@ -36,7 +39,6 @@ textarea {
   width: 100%;
   height: 100px;
   box-sizing: border-box;
-  margin-bottom: 1rem;
 }
 
 table {
@@ -94,22 +96,99 @@ color: red
   display: none;
 }
 
+#getdata {
+  display: none;
+}
+
+.HTTP_Headers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  div {
+    width: calc(33% - 0.5rem);
+  }
+  input {
+    width: 100%;
+    box-sizing: border-box;
+  }
+  label {
+    margin-bottom: 0.25rem;
+    white-space: nowrap;
+  }
+  .instructions {
+    display: none;
+  }
+
+  &:has(input:placeholder-shown) .instructions {
+    color: rgb(206, 72, 54);
+    display: block;
+    width: 100%;
+  }
+  & + .get_ratings_paster {
+    display: none;
+  }
+  &:has(input:placeholder-shown) + .get_ratings_paster {
+    display: block;
+  }
+}
+
+.loader {
+  display: none;
+  border: 4px solid #f3f3f3; /* Light grey */
+  border-top: 4px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  animation: spin 1s ease-in-out infinite;
+  &.visible {
+    display: inline-block;
+  }
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 </style>
 </head>
 <body>
 
     <div class="result"></div>
 
-    <fieldset>
-      <label for="data">Paste here the get_ratings request response</label>
-      <textarea id="data" placeholder="Paste here the get_ratings request response"></textarea>
-      <button id="getdata">Copy DATA to clipboard</button>  
-      <select id="sort_by">
-        <option value="POWER">Sort by Power</option>
-        <option value="MAX_POWER">Sort by Max Power</option>
-        <option value="MIN_POWER">Sort by Min Power</option>
-      </select>
-    </fieldset>
+    <div class="fieldset">
+
+      <fieldset class="HTTP_Headers">
+        <div><label for="version">PNK-Version</label> <input type="text" id="version" placeholder=" "></input></div>
+        <div><label for="player_id">PNK-Player-ID</label> <input type="text" id="player_id" placeholder=" "></input></div>
+        <div><label for="session_id">PNK-Session-ID</label> <input type="text" id="session_id" placeholder=" "></input></div>
+        <div class="instructions">
+          Your connection data are out of date, please follow the instructions below to update them : <br>
+          - Copy / Paste the request headers from your browser's network tab (F12) into the textarea below. <br>
+          - If you use the browser extension, close this page, go back to your game and click on the leaderboard button
+
+        </div>
+      </fieldset>
+
+      <fieldset class="get_ratings_paster">
+        <label for="data">Paste here the get_ratings request response</label>
+        <textarea id="data" placeholder="Paste here the get_ratings request response"></textarea>
+        <button id="getdata">Copy DATA to clipboard</button>  
+      </fieldset>
+
+      <fieldset class="call_to_action">
+        <select id="sort_by">
+          <option value="POWER">Sort by Power</option>
+          <option value="MAX_POWER">Sort by Max Power</option>
+          <option value="MIN_POWER">Sort by Min Power</option>
+        </select>
+        <button id="updateLeaderBoard">Update Leaderboard</button>  
+      </fieldset>
+
+      <fieldset class="status">
+        <div class="loader"></div>
+      </fieldset>
+
+    </div>
     
 
 
@@ -118,102 +197,108 @@ color: red
         const TOP_500_ALLIANCE = [4380,40321,204,3725,3632,1320,129,31139,26541,146729,297198,4800,1481,422,221844,2592,49478,61,14240,37262,264115,3523,22621,304,1751,43735,42190,232478,584,266719,2833,15842,64572,253238,2301,1206,127486,6682,216970,83892,9258,715,70130,11340,3123,56851,286471,211298,21619,4568,3407,3396,10963,254509,2219,24482,29204,283398,1311,259567,45915,12431,204882,831,5069,24914,289345,8236,1575,324720,14306,795,3193,272547,1049,279951,321180,2479,50830,11723,12892,266648,3216,1111,4514,131862,55192,7675,260390,1097,268476,297241,2494,227415,253606,2575,291026,323,54265,358,276396,33777,203532,33938,7615,236479,4580,328,62643,8674,1534,284580,57935,294935,369,24477,33123,301379,279608,48522,11749,160,294226,33706,105577,3944,62266,112725,22562,3774,280313,121516,308,730,283,19961,49619,1804,307478,256800,147948,3410,582,31940,245613,4622,6083,3057,1193,255448,163662,62118,1275,1187,1207,5436,285576,273083,326,286897,33687,100028,6633,3195,146924,51801,919,6819,3279,4798,8365,12934,6522,5856,855,7360,69443,329237,102273,257035,80482,250528,62188,31228,101594,54100,70122,2067,283543,242954,14043,2664,276318,281283,281914,7578,263542,141600,270417,315364,5969,1314,35141,100555,1257,34561,1120,234624,2426,3799,3885,400,2411,252798,253213,11631,25000,2272,40250,7678,290160,62004,297232,785,207666,290191,73562,934,8787,227237,6479,2877,259639,294245,28560,2574,313802,158266,263483,70384,64111,4304,12804,253563,32755,307776,309113,24472,54595,27647,304457,4426,105697,9678,40219,4197,214460,3806,291283,2321,250363,4406,245628,203684,7576,38847,291836,9716,163640,18204,116760,723,331132,190081,1509,248190,102826,182151,289147,2713,201174,6377,731,260279,7750,40253,238922,221,12843,4970,254019,4697,35554,12140,232454,253687,6078,249761,215613,6032,108,247903,248789,143846,190716,253687,6078,249761,215613,6032,108,247903,248789,143846,190716,131360,262,40896,17120,342155,447,221251,2326,78540,265383,322002,82,65963,308462,247682,297287,62279,2550,682,257591,17481,149800,2069,40450,7186,254694,270238,2536,971,289082,44441,1820,1350,1029,49882,19450,3247,79794,17302,253758,54923,13118,206289,70143,4737,7041,221464,11302,1450,291152,225308,79035,249824,1005,60339,53093,1273,51974,130794,841,6996,146926,85811,355,132584,273327,19709,109217,146547,8176,3915,338080,287188,184037,3529,66461,269278,236931,1368,305114,6403,261709,5758,1593,5608,48594,221290,3965,295084,17383,295188,332544,935,1733,299528,38454,7012,1271,68116,289218,272683,251833,3365,263063,5037,167305,5456,9117,135181,122365,4720,5149,29945,44236,51124,308132,47427,306201,102095,112794,4964,17881,15,269548,70291,264392,1453,154004,280321,4858,46987,245202,334989,1020,1094,12692,174032,5683,32562,234787,5838,2354,301111,3946,1066,3547,42104,310481,5851,3598,1230,180723,146527,429,27671,310532,322044,26521,763,646,7314,151591,266484,19206,114708,279460,1043,1903,48860,278233,12082,255967,24413,83632,63640,255687,256709,146825,27068,338131,79417,146565,276437,248834,474,322033,3813,23890,201040,76485,178438,282684,44455,30505,27547,1059]
         let SORT_BY = "POWER" // "POWER" || "MAX_POWER" || "MIN_POWER"
 
-        const process = (data) => {
+        const process = (data, log=false) => {
 
-            console.log({currentData, data})
+            log && console.log({currentData, data})
             if( !currentData.result.guilds ) {
-                console.log('First set of data')
+                log && console.log('First set of data')
                 currentData = JSON.parse(JSON.stringify(data))
             } else if ( data.result.guilds ) {
-                console.log('Merge ranking', currentData.result.guilds.length, data.result.guilds.length)
+                log && console.log('Merge ranking', currentData.result.guilds.length, data.result.guilds.length)
                 currentData.result.guilds.forEach(g => { g.place = "100+"})
                 currentData.result.guilds = [...currentData.result.guilds, ...data.result.guilds]
-                console.log('Merge ranking', currentData.result.guilds.length, data.result.guilds.length)
+                log && console.log('Merge ranking', currentData.result.guilds.length, data.result.guilds.length)
             }
 
+             if( data.error?.code === 11007) {
+                log && console.log(data.error.message)
+                const guildID = data.error.message.split(' ')[1]
+                const index = currentData.result.guilds.findIndex(g => g.id == guildID)
+                if (index !== -1) {
+                    currentData.result.guilds.splice(index,1)
+                }
+            }
             if( data.result.members ) {
-                console.log('Add single guild', data.result.guild.name)
-                console.log(data.result.guild)
+                log && console.log('Add single guild', data.result.guild.name)
+                log && console.log(data.result.guild)
                 currentData.result.guilds.push(data.result.guild)
-
-                console.log( currentData.result.guilds.filter(g => g.name === "FuMiCon") )
             }
-
 
             // Dedupe
-            console.log('Number of ally before : ', currentData.result.guilds || 0)
+            log && console.log('Number of ally before : ', currentData.result.guilds || 0)
             if(currentData.result.guilds != null) {
               currentData.result.guilds = [...currentData.result.guilds.reverse().filter((g,i) => i === currentData.result.guilds.indexOf(currentData.result.guilds.find(z => z.id === g.id))) ]
             }
-            console.log('Number of ally after : ', currentData.result.guilds || 0)
+            log && console.log('Number of ally after : ', currentData.result.guilds || 0)
+        }
 
+        const updateResult = () => {
+          const storeData = []
+          let html = `<table>
+              <tr>
+                  <th class=''>Map</th>
+                  <th class=''>Alliance</th>
+              <th class='member'>Members</th>
+              <th class='power'> Power</th>
+              <th class='maxpower'> Max Power</th>
+              <th class='minpower'> Min Power</th>
+              <th class='rank'> Rank</th>
+              <th class='rank'> ID</th>
+              </tr>
+          `
+          currentData.result.guilds
 
-        const storeData = []
-        let html = `<table>
-            <tr>
-                <th class=''>Map</th>
-                <th class=''>Alliance</th>
-            <th class='member'>Members</th>
-            <th class='power'> Power</th>
-            <th class='maxpower'> Max Power</th>
-            <th class='minpower'> Min Power</th>
-            <th class='rank'> Rank</th>
-            <th class='rank'> ID</th>
-            </tr>
-        `
-        currentData.result.guilds
+            
 
-          
+              // Sort by max power
+              .sort((a, b) => {
 
-            // Sort by max power
-            .sort((a, b) => {
+                  switch (SORT_BY) {
+                    case "POWER":
+                      let aCurrentPower = Math.max(a.summary_power, a.max_summary_power * 0.85)
+                      let bCurrentPower = Math.max(b.summary_power, b.max_summary_power * 0.85)
+                      return aCurrentPower - bCurrentPower; 
+                      break;
+                    
+                    case "MAX_POWER":
+                      return a.max_summary_power - b.max_summary_power;
 
-                switch (SORT_BY) {
-                  case "POWER":
-                    let aCurrentPower = Math.max(a.summary_power, a.max_summary_power * 0.85)
-                    let bCurrentPower = Math.max(b.summary_power, b.max_summary_power * 0.85)
-                    return aCurrentPower - bCurrentPower; 
-                    break;
+                    case "MIN_POWER":
+                      return a.max_summary_power * 0.85 - b.max_summary_power * 0.85;
+
                   
-                  case "MAX_POWER":
-                    return a.max_summary_power - b.max_summary_power;
+                  }
 
-                  case "MIN_POWER":
-                    return a.max_summary_power * 0.85 - b.max_summary_power * 0.85;
+                  
+              })
+              .reverse()
+              .forEach((g, i) => {
 
-                
-                }
+              storeData.push({
+                name: g.name,
+                members_count: g.members_count || g.current_members || g.guild_current_members, 
+                summary_power : g.summary_power,
+                max_summary_power: g.max_summary_power, 
+                place: g.place,
+                id: g.id
+              })
 
-                 
-            })
-            .reverse()
-            .forEach((g, i) => {
-
-            storeData.push({
-              name: g.name,
-              members_count: g.members_count || g.current_members || g.guild_current_members, 
-              summary_power : g.summary_power,
-              max_summary_power: g.max_summary_power, 
-              place: g.place,
-              id: g.id
-            })
-
-            html += `<tr class='${g.name.includes("FuMiCon")||g.name.includes("TaintKickerz")?"fumicon":""} ${(g.place==="100+" || g.place>100)?"outOfLeaderBoard":""}'>
-                <td>${ Math.floor( i / 10 ) +1 }</td>
-            <td class='alliance'>${g.name}</td> 
-            <td class='member'> ${(g.members_count || g.current_members || g.guild_current_members || 0).toLocaleString('en-US')}</td>
-            <td class='power ${g.summary_power > g.max_summary_power * 0.85 ? "bold": ""}'> ${g.summary_power.toLocaleString('en-US')}</td>
-            <td class='maxpower'> ${g.max_summary_power.toLocaleString('en-US')}</td>
-            <td class='minpower ${g.summary_power < g.max_summary_power * 0.85 ? "bold": ""}'>${ Math.round(g.max_summary_power * 0.85).toLocaleString('en-US')}</td>
-            <td class='rank'>${g.place}</td> 
-            <td class='id'>${g.id}</td> 
-            </tr>`
-        })
-        html += "</table>"
-        // console.log(JSON.stringify(storeData).length)
-        localStorage.setItem('storeData', JSON.stringify({result:{guilds: storeData}}))
-        storedData = localStorage.getItem('storeData')
-        document.querySelector('.result').innerHTML = html
+              html += `<tr class='${g.name.includes("FuMiCon")||g.name.includes("TaintKickerz")?"fumicon":""} ${(g.place==="100+" || g.place>100)?"outOfLeaderBoard":""}'>
+              <td>${ Math.floor( i / 10 ) +1 }</td>
+              <td class='alliance'>${g.name}</td> 
+              <td class='member'> ${(g.members_count || g.current_members || g.guild_current_members || 0).toLocaleString('en-US')}</td>
+              <td class='power ${g.summary_power > g.max_summary_power * 0.85 ? "bold": ""}'> ${g.summary_power.toLocaleString('en-US')}</td>
+              <td class='maxpower'> ${g.max_summary_power.toLocaleString('en-US')}</td>
+              <td class='minpower ${g.summary_power < g.max_summary_power * 0.85 ? "bold": ""}'>${ Math.round(g.max_summary_power * 0.85).toLocaleString('en-US')}</td>
+              <td class='rank'>${g.place}</td> 
+              <td class='id'>${g.id}</td> 
+              </tr>`
+          })
+          html += "</table>"
+          // console.log(JSON.stringify(storeData).length)
+          localStorage.setItem('storeData', JSON.stringify({result:{guilds: storeData}}))
+          storedData = localStorage.getItem('storeData')
+          document.querySelector('.result').innerHTML = html
         }
 
         const processHeaders = (data) => {
@@ -224,19 +309,11 @@ color: red
             if(!value) continue 
             headers[key] = value
           }
-          sessionStorage.setItem('deviceID', headers['PNK-Device-ID'])
-          sessionStorage.setItem('loginID', headers['PNK-Player-ID'])
-          sessionStorage.setItem('sessionID', headers['PNK-Session-Id'])
-          sessionStorage.setItem('appVersion', headers['PNK-Version'])
 
-          loginID = sessionStorage.getItem('loginID')
-          sessionID = sessionStorage.getItem('sessionID')
-          deviceID = sessionStorage.getItem('deviceID')
-          appVersion = sessionStorage.getItem('appVersion')
+          setNewHeaders(headers['PNK-Player-ID'], headers['PNK-Session-Id'], headers['PNK-Version'])
 
           document.querySelector('#data').value = ""
           console.log({loginID, sessionID, deviceID, appVersion})
-          autoFetch()
         }
 
         const getAllianceById = async (id = 61) => {
@@ -286,9 +363,45 @@ color: red
           try {
             const response = await fetch(url, options);
             const data = await response.json();
+            if(data.error.code) {
+              throw new Error(data.error.title);
+            }
             return data
           } catch (error) {
+            console.error('Error fetching leaderboard:', error);
+            handleInvalidHeaders();
+            return null;
           }
+        }
+
+        const setNewHeaders = (_loginID, _sessionID, _appVersion) => {
+          loginID = _loginID;
+          sessionID = _sessionID;
+          appVersion = _appVersion;
+
+          sessionStorage.setItem('loginID', _loginID)
+          sessionStorage.setItem('sessionID', _sessionID)
+          sessionStorage.setItem('appVersion', _appVersion)
+
+          document.querySelector('#player_id').value = _loginID
+          document.querySelector('#session_id').value = _sessionID
+          document.querySelector('#version').value = _appVersion
+
+          console.log({loginID, sessionID, deviceID, appVersion})
+        }
+
+        const handleInvalidHeaders = () => {
+          loginID = null;
+          sessionID = null;
+          appVersion = null;
+          sessionStorage.removeItem('loginID');
+          sessionStorage.removeItem('sessionID');
+          sessionStorage.removeItem('appVersion');
+          document.querySelector('#player_id').value = ""
+          document.querySelector('#session_id').value = ""
+          document.querySelector('#version').value = ""
+
+          console.log({loginID, sessionID, deviceID, appVersion})
         }
 
         const updateTop500 = async () => {
@@ -305,27 +418,35 @@ color: red
 
         const autoFetch = async (e) => {
 
-          currentData.result.guilds?.forEach(g => { g.place = "100+"})
+          document.querySelector('.loader').classList.add('visible')
+
           // console.log(currentData.result.guilds)
           const leaderboard = await getLeaderboard()
+          if(leaderboard == null) {
+            document.querySelector('.loader').classList.remove('visible')
+            return;
+          }
           // console.log(leaderboard)
+
+          currentData.result.guilds?.forEach(g => { g.place = "100+"})
           process(leaderboard)
 
-          await updateTop500()
+          // await updateTop500()
 
           const promises = []
           currentData.result.guilds.forEach((g, i) => {
             if(g.place === "100+") {
-              promises.push(getAllianceById(g.id) )
+              promises.push(getAllianceById(g.id))
             }
           })
 
           // console.log(promises)
           Promise.all(promises).then((values) => {
-            values.forEach(v =>  { 
-              // console.log(v.result.guild)
+            values.forEach((v) =>  { 
+              document.querySelector('.loader').classList.remove('visible')
               process(v)
             })
+            updateResult()
           });
 
         }
@@ -334,19 +455,37 @@ color: red
 
         let loginID = sessionStorage.getItem('loginID')
         let sessionID = sessionStorage.getItem('sessionID')
-        let deviceID = sessionStorage.getItem('deviceID')
+        let deviceID = 'ea156bc8-1359-13c6-ae1c-a12fe5a9f3e0' // Constant device ID for all users
         let appVersion = sessionStorage.getItem('appVersion')
+
+        const urlParams = new URLSearchParams(window.location.search);
+        if(urlParams.has('PNK-Player-ID') && urlParams.has('PNK-Session-Id') && urlParams.has('PNK-Version')) {
+          loginID = urlParams.get('PNK-Player-ID')
+          sessionID = urlParams.get('PNK-Session-Id')
+          appVersion = urlParams.get('PNK-Version')
+          sessionStorage.setItem('loginID', loginID)
+          sessionStorage.setItem('sessionID', sessionID)
+          sessionStorage.setItem('appVersion', appVersion)
+        }
+        document.querySelector('#player_id').value = loginID
+        document.querySelector('#session_id').value = sessionID
+        document.querySelector('#version').value = appVersion
+        console.log({loginID, sessionID, deviceID, appVersion})
+
         let storedData = localStorage.getItem('storeData')
         document.querySelector('#sort_by').value = "POWER"
 
-        console.log({loginID, sessionID, deviceID, appVersion})
-
         if(storedData) {
           process(JSON.parse(storedData))
+          updateResult()
         }
 
         document.querySelector('#getdata').addEventListener("click", async (e) => {
           navigator.clipboard.writeText(JSON.stringify(currentData));
+        })
+
+        document.querySelector('#updateLeaderBoard').addEventListener("click", async (e) => {
+          autoFetch()
         })
 
         document.addEventListener("paste", async (e) => {
@@ -357,16 +496,24 @@ color: red
                 process(JSON.parse(data), true)
               } catch (error) {
                 processHeaders(data)
+                autoFetch()
               }
           }, 0)
         })
 
-        
         document.querySelector('#sort_by').addEventListener('change', e => {
           SORT_BY = e.target.value
           process(JSON.parse(storedData))
         })
 
+        document.querySelectorAll('#version, #player_id, #session_id').forEach(input => {
+          input.addEventListener('input', e => {
+            const _loginID = document.querySelector('#player_id').value
+            const _sessionID = document.querySelector('#session_id').value
+            const _appVersion = document.querySelector('#version').value
+            setNewHeaders(_loginID, _sessionID, _appVersion)
+          })
+        })
     </script>
 </body>
 </html>
