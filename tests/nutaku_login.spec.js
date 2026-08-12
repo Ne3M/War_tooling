@@ -57,7 +57,7 @@ test('Get Lust Goddess Credentials',  async ({page}) => {
 
     console.log(result)
 
-    const outputFolder = path.resolve(process.cwd(), '/dist/data');
+    const outputFolder = path.resolve(process.cwd(), './dist/data');
     const outputPath = path.join(outputFolder, 'credentials.json');
 
     await fs.mkdir(outputFolder, { recursive: true });
