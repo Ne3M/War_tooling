@@ -1,5 +1,4 @@
 *.psd
 *-workspace
 node_modules/
-data/
 test-results/
