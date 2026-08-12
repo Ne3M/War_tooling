@@ -236,8 +236,8 @@ color: red
           const storeData = []
           let html = `<table>
               <tr>
-                <th colspan="8" class='ranking_time'></th>
-              </tr>
+                    <th colspan="8" class='ranking_time'>${new Date().toLocaleString({ dateStyle: 'short', timeStyle: 'short' })}</th>
+                  </tr>
               <tr>
                 <th class=''>Map</th>
                 <th class=''>Alliance</th>

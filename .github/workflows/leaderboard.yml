@@ -24,6 +24,9 @@ on:
     # Lundi 21h00 Paris -> Lundi 19h00 UTC
     - cron: '0 19 * * 1'
     
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
