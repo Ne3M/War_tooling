@@ -17,7 +17,7 @@ test('Get Lust Goddess Credentials',  async ({page}) => {
     await page.goto('https://www.nutaku.net/fr/', {waitUntil: "domcontentloaded"});
 
     // Open login (header "Connexion")
-    await page.locator('text=Connexion').first().click();
+    await page.locator('header .js-login').first().click();
 
     // Fill credentials
     await page.fill('input[name="email"]', 'banzaichoupi1@yopmail.com');
@@ -60,7 +60,7 @@ test('Get Lust Goddess Credentials',  async ({page}) => {
     const outputFolder = path.resolve(process.cwd(), 'dist', 'data');
     const outputPath = path.join(outputFolder, 'credentials.json');
 
-    await fs.mkdir(outputFolder, { recursive: true });
+    // await fs.mkdir(outputFolder, { recursive: true });
     await fs.writeFile(outputPath, JSON.stringify(result, null, 2), 'utf8');
 
     // expect result to have no null value
