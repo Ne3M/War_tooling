@@ -14,7 +14,7 @@ const result = {
 test('Get Lust Goddess Credentials',  async ({page}) => {
 
     // Go to game page
-    await page.goto('https://www.nutaku.net/fr/games/lust-goddess/', {waitUntil: "domcontentloaded"});
+    await page.goto('https://www.nutaku.net/fr/', {waitUntil: "domcontentloaded"});
 
     // Open login (header "Connexion")
     await page.locator('text=Connexion').first().click();
