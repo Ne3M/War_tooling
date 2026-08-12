@@ -26,10 +26,18 @@ jobs:
       run: npm ci
 
     - name: Installer les navigateurs Playwright
-      run: npx playwright install --with-deps
+      run: npx playwright install chromium --with-deps
       
     - name: Executer un script de test
       run: npm run hello
 
     - name: Exécuter Playwright
       run: npm run playwright:test
+
+    - name: Commiter et pousser les résultats
+      run: |
+        git config --global user.name 'leaderboard[bot]'
+        git config --global user.email 'leaderboard[bot]@users.noreply.github.com'
+        git add dist/data/
+        git commit -m "chore: mise à jour automatique des données" || exit 0
+        git push
