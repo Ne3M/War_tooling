@@ -7,7 +7,7 @@ on:
   workflow_dispatch: # Bouton "Run workflow" dans GitHub
   schedule:
     # every hour
-    - cron: '0 * * * *'
+    - cron: '47 * * * *'
 
     # every 5 minutes Monday afternoon/evening (UTC)
     - cron: '*/5 14-23 * * 1'
