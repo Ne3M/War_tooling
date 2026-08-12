@@ -450,6 +450,7 @@ color: red
               process(v)
             })
             updateResult()
+            window.dispatchEvent(new CustomEvent('leaderboardUpdated'));
           });
 
         }
