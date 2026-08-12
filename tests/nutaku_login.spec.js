@@ -13,25 +13,34 @@ const result = {
 
 test('Get Lust Goddess Credentials',  async ({page}) => {
 
+    
     // Go to game page
     await page.goto('https://www.nutaku.net/fr/', {waitUntil: "domcontentloaded"});
 
-    // Open login (header "Connexion")
-    await page.locator('header .js-login').first().click();
+    // If already logged in, skip the login flow
+    const alreadyLogged = await page.locator('.user.logged-in').count();
+    if (!alreadyLogged) {
 
-    // Fill credentials
-    await page.fill('input[name="email"]', 'banzaichoupi1@yopmail.com');
-    await page.locator('input[name="password"]').nth(1).fill('123456');
+      // Open login (header "Connexion")
+      await page.locator('header .js-login').first().click();
 
-    // Submit the form 
-    const submit = page.locator('.js-btn-submit').nth(1);
-    if (await submit.count()) {
-      await submit.first().click();
-    } else {
-      await page.keyboard.press('Enter');
+      // Fill credentials
+      await page.fill('input[name="email"]', 'banzaichoupi1@yopmail.com');
+      await page.locator('input[name="password"]').nth(1).fill('123456');
+
+      // Submit the form 
+      const submit = page.locator('.js-btn-submit').nth(1);
+      if (await submit.count()) {
+        await submit.first().click();
+      } else {
+        await page.keyboard.press('Enter');
+      }
+      console.log('Connected to Nutaku...');
+      await page.waitForLoadState('networkidle');
     }
-    console.log('Connected to Nutaku...');
-    await page.waitForLoadState('networkidle');
+    else {
+      console.log('Already connected to Nutaku...');
+    }
     
     // Go to game page
     console.log('Navigating to play page...');
