@@ -302,6 +302,8 @@ color: red
           localStorage.setItem('storeData', JSON.stringify({result:{guilds: storeData}}))
           storedData = localStorage.getItem('storeData')
           document.querySelector('.result').innerHTML = html
+
+          window.dispatchEvent(new CustomEvent('leaderboardUpdated'));
         }
 
         const processHeaders = (data) => {
@@ -455,9 +457,6 @@ color: red
               updateResult()
             });
           }
-
-          window.dispatchEvent(new CustomEvent('leaderboardUpdated'));
-
         }
 
         let currentData = { result:{ guilds: []} };
@@ -513,6 +512,7 @@ color: red
         document.querySelector('#sort_by').addEventListener('change', e => {
           SORT_BY = e.target.value
           process(JSON.parse(storedData))
+          updateResult()
         })
 
         document.querySelectorAll('#version, #player_id, #session_id').forEach(input => {
