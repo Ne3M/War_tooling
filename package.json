@@ -3,11 +3,18 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "engines": {
+    "node": ">=24"
+  },
   "dependencies": {
-    "netlify-plugin-bundle-env": "0.6.2"
+    "netlify-plugin-bundle-env": "0.6.2",
+    "playwright": "^1.37.0",
+    "@playwright/test": "^1.37.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "hello": "echo \"Hello World\"",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "playwright:test": "npx playwright test"
   },
   "author": "",
   "license": "ISC"
