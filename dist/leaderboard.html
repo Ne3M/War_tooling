@@ -408,6 +408,8 @@ color: red
         }
 
         const updateTop500 = async () => {
+
+          console.log('update TOP 500')
           const promises = []
           TOP_500_ALLIANCE.forEach((g) => {
               promises.push(getAllianceById(g) )
@@ -435,7 +437,7 @@ color: red
           currentData.result.guilds?.forEach(g => { g.place = "100+"})
           process(leaderboard)
 
-          if(currentData.result.guilds.length === 0) {
+          if(currentData.result.guilds.length === 100) {
             await updateTop500();
           } else {
             const promises = []
