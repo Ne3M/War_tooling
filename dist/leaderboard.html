@@ -59,6 +59,15 @@ th {
   position: sticky;
   top: 0;
 }
+th.active {
+  text-transform: uppercase;
+  background: #555;
+  color: #fff;
+}
+th.active::after {
+  content: " ▼";
+  display: inline;
+}
 th:first-child {
   text-align: left;
 }
@@ -242,9 +251,9 @@ color: red
                 <th class=''>Map</th>
                 <th class=''>Alliance</th>
                 <th class='member'>Members</th>
-                <th class='power'> Power</th>
-                <th class='maxpower'> Max Power</th>
-                <th class='minpower'> Min Power</th>
+                <th class='power ${SORT_BY==='POWER'?'active':''}'> Power</th>
+                <th class='maxpower ${SORT_BY==='MAX_POWER'?'active':''}'> Max Power</th>
+                <th class='minpower${SORT_BY==='MIN_POWER'?'active':''}'> Min Power</th>
                 <th class='rank'> Rank</th>
                 <th class='rank'> ID</th>
               </tr>
