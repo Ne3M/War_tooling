@@ -152,8 +152,11 @@ test('Screenshot Leaderboard', async ({page}) => {
 
   await page.locator('#updateLeaderBoard').first().click();
   await waitForCustomEvent;
-  console.log('L\'événement JS a bien été reçu !');
+  await page.locator('.result').screenshot({ path: 'dist/data/latest_leaderboard_POWER.png' });
 
-  await page.locator('.result').screenshot({ path: 'dist/data/latest_leaderboard.png' });
+  await page.locator('select#sort_by').selectOption('MAX_POWER');
+  await waitForCustomEvent;
+  await page.locator('.result').screenshot({ path: 'dist/data/latest_leaderboard_MAX_POWER.png' });
+
 
 })
