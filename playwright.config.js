@@ -1,7 +1,7 @@
 import { defineConfig } from '@playwright/test';
 
 export default defineConfig({
-  timeout: 300000,
+  timeout: 180000,
   name: 'chromium',
   use: {
     // channel: 'chromium', // full browser even in headless

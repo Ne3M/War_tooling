@@ -12,7 +12,6 @@
     "@playwright/test": "^1.37.0"
   },
   "scripts": {
-    "hello": "echo \"Hello World\"",
     "test": "echo \"Error: no test specified\" && exit 1",
     "playwright:test": "npx playwright test"
   },
