@@ -1,2 +1,3 @@
 *.psd
 *-workspace
+node_modules/
