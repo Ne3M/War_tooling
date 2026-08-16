@@ -63,7 +63,9 @@ test('Get Lust Goddess Credentials',  async ({page}) => {
     test.skip(credentials.stillValid, 'La fonctionnalité n\'est pas active sur cet environnement.');
 
     // Go to game page
+    console.log('Open Nutaku...');
     await page.goto('https://www.nutaku.net/fr/', {waitUntil: "domcontentloaded"});
+    await page.waitForTimeout(1000); // wait for 1 seconds
 
     // If already logged in, skip the login flow
     const alreadyLogged = await page.locator('.user.logged-in').count();
