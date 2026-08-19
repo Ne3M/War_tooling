@@ -123,6 +123,7 @@ test('Get Lust Goddess Credentials',  async ({page}) => {
     credentials.sessionId = body.result.session_id
     credentials.playerId = body.result.profile_id
     credentials.updateTime = new Date().toISOString().slice(0, 16); 
+    credentials.stillValid = true; 
 
     console.log(credentials)
 
