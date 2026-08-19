@@ -60,19 +60,29 @@ test('Check credentials validity', async ({page}) => {
 
 test('Get Lust Goddess Credentials',  async ({page}) => {
 
-    test.skip(credentials.stillValid, 'La fonctionnalité n\'est pas active sur cet environnement.');
+    test.skip(credentials.stillValid, 'Credentials are still valid, no need to reconnect');
 
     // Go to game page
     console.log('Open Nutaku...');
     await page.goto('https://www.nutaku.net/fr/', {waitUntil: "domcontentloaded"});
-    await page.waitForTimeout(1000); // wait for 1 seconds
+    await page.waitForTimeout(2000); // wait for 1 seconds
 
     // If already logged in, skip the login flow
     const alreadyLogged = await page.locator('.user.logged-in').count();
     if (!alreadyLogged) {
 
+      // Close geoguard modal if any
+      await page.evaluate(() => {
+        if(document.querySelector('.overlay')) {
+          document.querySelector('.overlay').style.display = "none"
+        }
+        if(document.querySelector('.js-disclaimer-geoguard')) {
+          document.querySelector('.js-disclaimer-geoguard').style.display = "none"
+        }
+      })
+
       // Open login (header "Connexion")
-      await page.locator('header .js-login').first().click();
+      await page.locator('header .js-login').first().click({timeout: 3000});
 
       // Fill credentials
       await page.fill('input[name="email"]', 'banzaichoupi1@yopmail.com');
@@ -131,6 +141,8 @@ test('Get Lust Goddess Credentials',  async ({page}) => {
 });
 
 test('Screenshot Leaderboard', async ({page}) => {
+
+  test.skip(!credentials.stillValid, 'Credentials are not valid, useless to try updating leaderboard');
 
   await page.goto(`https://fumicon-war-tools.netlify.app/leaderboard.html?PNK-Player-ID=${credentials.playerId}&PNK-Session-Id=${credentials.sessionId}&PNK-Version=${credentials.version}`)
   
