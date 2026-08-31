@@ -18,7 +18,7 @@ const credentials = {
   updateTime: null
 }
 
-test.use({ userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0' });
+test.use({ userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0 Banzai' });
 
 test('Check credentials validity', async ({page}) => {
 
@@ -104,9 +104,12 @@ test('Get Lust Goddess Credentials',  async ({page}) => {
     
     // Go to game page
     console.log('Navigating to play page...');
-    
+    await page.waitForTimeout(2000); // attend x secondes
     await page.goto('https://www.nutaku.net/fr/games/lust-goddess/play/', {waitUntil: "domcontentloaded"});
+
     await page.waitForTimeout(5000); // attend x secondes
+    console.log('Wait for game loading...');
+
 
 
     const req = await page.waitForRequest(r => r.url().includes('/gs_api/profile/nop'), { timeout: 120000 });
