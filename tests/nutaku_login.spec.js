@@ -18,7 +18,7 @@ const credentials = {
   updateTime: null
 }
 
-test.use({ userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36' });
+test.use({ userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0' });
 
 test('Check credentials validity', async ({page}) => {
 
