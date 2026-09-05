@@ -115,7 +115,7 @@ color: red
   flex-wrap: wrap;
   gap: 0.5rem;
   div {
-    width: calc(33% - 0.5rem);
+    width: calc(25% - 0.5rem);
   }
   input {
     width: 100%;
@@ -171,6 +171,7 @@ color: red
         <div><label for="version">PNK-Version</label> <input type="text" id="version" placeholder=" "></input></div>
         <div><label for="player_id">PNK-Player-ID</label> <input type="text" id="player_id" placeholder=" "></input></div>
         <div><label for="session_id">PNK-Session-ID</label> <input type="text" id="session_id" placeholder=" "></input></div>
+        <div><label for="device_id">PNK-Device-ID</label> <input type="text" id="device_id" placeholder=" "></input></div>
         <div class="instructions">
           Your connection data are out of date, please follow the instructions below to update them : <br>
           - Copy / Paste the request headers from your browser's network tab (F12) into the textarea below. <br>
@@ -325,7 +326,7 @@ color: red
             headers[key] = value
           }
 
-          setNewHeaders(headers['PNK-Player-ID'], headers['PNK-Session-Id'], headers['PNK-Version'])
+          setNewHeaders(headers['PNK-Player-ID'], headers['PNK-Session-Id'], headers['PNK-Version'], headers['PNK-Device-Id'])
 
           document.querySelector('#data').value = ""
           console.log({loginID, sessionID, deviceID, appVersion})
@@ -389,18 +390,21 @@ color: red
           }
         }
 
-        const setNewHeaders = (_loginID, _sessionID, _appVersion) => {
+        const setNewHeaders = (_loginID, _sessionID, _appVersion, _deviceID) => {
           loginID = _loginID;
           sessionID = _sessionID;
           appVersion = _appVersion;
+          deviceID = _deviceID;
 
           sessionStorage.setItem('loginID', _loginID)
+          sessionStorage.setItem('deviceID', _deviceID)
           sessionStorage.setItem('sessionID', _sessionID)
           sessionStorage.setItem('appVersion', _appVersion)
 
           document.querySelector('#player_id').value = _loginID
           document.querySelector('#session_id').value = _sessionID
           document.querySelector('#version').value = _appVersion
+          document.querySelector('#device_id').value = _deviceID
 
           console.log({loginID, sessionID, deviceID, appVersion})
         }
@@ -409,12 +413,16 @@ color: red
           loginID = null;
           sessionID = null;
           appVersion = null;
+          deviceID = null;
           sessionStorage.removeItem('loginID');
           sessionStorage.removeItem('sessionID');
           sessionStorage.removeItem('appVersion');
+          sessionStorage.removeItem('deviceID');
+          
           document.querySelector('#player_id').value = ""
           document.querySelector('#session_id').value = ""
           document.querySelector('#version').value = ""
+          document.querySelector('#device_id').value = ""
 
           console.log({loginID, sessionID, deviceID, appVersion})
         }
@@ -473,21 +481,24 @@ color: red
 
         let loginID = sessionStorage.getItem('loginID')
         let sessionID = sessionStorage.getItem('sessionID')
-        let deviceID = 'ea156bc8-1359-13c6-ae1c-a12fe5a9f3e0' // Constant device ID for all users
+        let deviceID = sessionStorage.getItem('deviceID')
         let appVersion = sessionStorage.getItem('appVersion')
 
         const urlParams = new URLSearchParams(window.location.search);
-        if(urlParams.has('PNK-Player-ID') && urlParams.has('PNK-Session-Id') && urlParams.has('PNK-Version')) {
+        if(urlParams.has('PNK-Player-ID') && urlParams.has('PNK-Session-Id') && urlParams.has('PNK-Version') && urlParams.has('PNK-Device-Id')) {
           loginID = urlParams.get('PNK-Player-ID')
           sessionID = urlParams.get('PNK-Session-Id')
           appVersion = urlParams.get('PNK-Version')
+          deviceID = urlParams.get('PNK-Device-Id')
           sessionStorage.setItem('loginID', loginID)
           sessionStorage.setItem('sessionID', sessionID)
           sessionStorage.setItem('appVersion', appVersion)
+          sessionStorage.setItem('deviceID', deviceID)
         }
         document.querySelector('#player_id').value = loginID
         document.querySelector('#session_id').value = sessionID
         document.querySelector('#version').value = appVersion
+        document.querySelector('#device_id').value = deviceID
         console.log({loginID, sessionID, deviceID, appVersion})
 
         let storedData = localStorage.getItem('storeData')
@@ -525,12 +536,13 @@ color: red
           updateResult()
         })
 
-        document.querySelectorAll('#version, #player_id, #session_id').forEach(input => {
+        document.querySelectorAll('#version, #player_id, #session_id, #device_id').forEach(input => {
           input.addEventListener('input', e => {
             const _loginID = document.querySelector('#player_id').value
             const _sessionID = document.querySelector('#session_id').value
             const _appVersion = document.querySelector('#version').value
-            setNewHeaders(_loginID, _sessionID, _appVersion)
+            const _deviceId = document.querySelector('#device_id').value
+            setNewHeaders(_loginID, _sessionID, _appVersion, _deviceId)
           })
         })
     </script>

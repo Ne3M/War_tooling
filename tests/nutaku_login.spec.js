@@ -148,7 +148,7 @@ test('Screenshot Leaderboard', async ({page}) => {
 
   test.skip(!credentials.stillValid, 'Credentials are not valid, useless to try updating leaderboard');
 
-  await page.goto(`https://fumicon-war-tools.netlify.app/leaderboard.html?PNK-Player-ID=${credentials.playerId}&PNK-Session-Id=${credentials.sessionId}&PNK-Version=${credentials.version}`)
+  await page.goto(`https://fumicon-war-tools.netlify.app/leaderboard.html?PNK-Player-ID=${credentials.playerId}&PNK-Session-Id=${credentials.sessionId}&PNK-Version=${credentials.version}&PNK-Device-Id=${credentials.deviceId}`, {waitUntil: "domcontentloaded"});
   
   // Prépare l'attente de l'événement dans le navigateur
   const waitForCustomEvent = page.waitForFunction(() => {
