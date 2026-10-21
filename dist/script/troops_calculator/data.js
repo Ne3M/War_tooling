@@ -5,7 +5,7 @@ const twinsData = [{"level":1, "powerBase": 2500, "coreCost": 20, "cubeCost":0, 
 let totalCores = 0;
 let totalCubes = 0;
 
-for (let i = 0; i < 2000; i++) {
+for (let i = 0; i < 2500; i++) {
   let lvl = i+1;
   let cubeCost = (lvl % 10 === 0) ? cubeCostsList[(lvl/10)-1] : 0;
 
